@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule (.*) /ABC/public/$1 [L]
