@@ -1,0 +1,55 @@
+.container{
+    max-width: 1400px;
+    width: 100%;
+    padding: 10px;
+    position: relative;
+}
+
+.background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
+    opacity: 0.5;
+    transition: all 0.5s linear;
+}
+.image{
+    max-width: 300px;
+    width: 100%;
+    border-radius: 20px;
+    max-height: 450px;
+    height: 100%;
+}
+.title{
+    font-family: var(--font-birds);
+    color: #fff;
+    font-weight: 700;
+    font-size: 60px;
+}
+.othername{
+    color: rgb(206, 206, 203);
+    font-family: var(--font-mono);
+    font-weight: 500;
+}
+.suggesttitle{
+    margin-top: 40px;
+    color: #fff;
+    display: none;
+}
+
+@media(max-width:1000px){
+    .suggesttitle{
+        display: block;
+    }
+    .title{
+        text-align: center;
+    }
+    .othername{
+        text-align: center;
+    }
+}

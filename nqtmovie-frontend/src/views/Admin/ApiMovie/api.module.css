@@ -1,0 +1,23 @@
+.container{
+    background: var(--bg-adminroot);
+    padding: 20px;
+    border-radius: 10px;
+}
+.container h2{
+    border-bottom: 1px solid #fff;
+    padding-bottom: 20px;
+}
+.form{
+    margin-top: 30px;
+}
+.input{
+    background: #111827;
+    border: none;
+    border-radius: 5px;
+    padding: 0 15px;
+    width: 100%;
+}
+.input:focus{
+    outline: none;
+    border: 1px solid #22d3ee;
+}

@@ -1,0 +1,217 @@
+.iframecontainer{
+    height: 65vh;
+    width: 100%;
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    transition: all 0.3s linear;
+}
+
+.iframe{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border: 0;
+    transition: all 0.3s linear;
+}
+.extension{
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    background: rgb(63 63 70/1);
+    padding: 5px 7px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+.extension:hover{
+    background: rgb(63 63 70/0.7);
+}
+.active{
+    width: 100% !important;
+}
+.active .iframecontainer{
+    height: 85vh;
+}
+
+.imgepisode{
+    width: 100%;
+    height: 90px;
+    border-radius: 10px;
+    object-position: center;
+    object-fit: cover;
+}
+.boxepisodes{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    height: 620px;
+    overflow-x: hidden;
+    padding: 0 15px;
+}
+.activeEpisode{
+    background: var(--bg-secondary);
+    border-radius: 10px;
+}
+  
+.itemEpisode{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+    color: #fff;
+}
+.itemEpisode:hover{
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    color: gray !important;
+}
+.thumbnail{
+    position: relative;
+    width: 150px;
+}
+.timeThumbnail{
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: #00031c66;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 12px;
+}
+.server{
+    background: rgb(63 63 70/1);
+    color: #fff;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.server:hover{
+    background: var(--bg-secondary);
+}
+.activeServer{
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+}
+.boxepisodesMobile{
+    display: none;
+}
+.imgMobile{
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 20px;
+    height: 120px;
+    transition: all 0.3s linear;
+}
+.titleEpisodesBox{
+    color: #fff;
+    padding-left: 7px;
+    font-size: 20px;
+}
+.boxepisodesMobileItem{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px;
+    cursor: pointer;
+    overflow: hidden;
+}
+.boxepisodesMobileItem:hover .imgMobile{
+    transform: scale(1.05);
+}
+.boxepisodesMobileItem:hover .titleEpisodesBox{
+    color: gray !important;
+}
+.activeEpisodeMobile .titleEpisodesBox span{
+    color: var(--bg-btn) !important;
+}
+.activeEpisodeMobile img{
+    opacity: 0.7;
+}
+.activeEpisodeMobile .timeThumbnail{
+    color: var(--text-secondary) !important;
+}
+.containerepispde{
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.moreEpisode{
+    color: #fff;
+    background: var(--bg-main);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: all 0.3s linear;
+}
+.moreEpisode:hover{
+    background-color: var(--bg-btn);
+}
+.activeEpisodeMore{
+    background: var(--bg-btn);
+    color: #000;
+}
+
+@media(max-width:991px){
+    .boxepisodes{
+        display: none;
+    }
+    .boxepisodesMobile{
+        display: block;
+    }
+    .btnExpand{
+        display: none;
+    }
+    .extension{
+        padding: 10px;
+    }
+    .extension span{
+        display: none;
+    }
+    .containerepispde{
+        grid-template-columns: repeat(6,1fr);
+    }
+}
+
+@media(max-width:750px){
+    .iframecontainer{
+        height: 50vh;
+    }
+    .containerepispde{
+        grid-template-columns: repeat(4,1fr);
+    }
+}
+
+@media (max-width:550px){
+    .iframecontainer{
+        height: 30vh;
+    }
+    .containerepispde{
+        grid-template-columns: repeat(3,1fr);
+    }
+}
+
+@media(max-height:600px){
+    .iframecontainer{
+        height: 80vh;
+    }
+    .active .iframecontainer{
+        height: 100vh;
+    }
+}

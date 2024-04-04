@@ -1,0 +1,132 @@
+
+.container{
+    max-width: 1400px;
+    width: 100%;
+}
+.maincontent{
+    min-height: 50vh;
+}
+.footer{
+    width: 100%;
+    background: #0a0d14;
+    color: #949caf;
+}
+.titlefooter{
+    border-bottom: 1px solid var(--bg-secondary);
+    padding-top: 20px;
+    padding-bottom: 10px;
+    width: 100%;
+}
+.titlefooter a{
+    color: #949caf !important;
+}
+.titlefooter a:hover{
+    color: #fff !important;
+}
+.contentfooter{
+    margin-top: 40px;
+}
+.contentfooter h5{
+    color: #d1d1d1;
+}
+.contentfooter a:hover{
+    color: #fff !important;
+}
+.listfooter{
+    column-count: 2;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+.listfooter li a{
+    color: #949caf !important;
+}
+.listfooter li{
+    padding: 5px 0;
+}
+.support{
+    flex: 1;
+    border-left: 1px solid var(--bg-secondary);
+    padding-left: 20px;
+}
+.listsupport{
+    list-style: none;
+    padding: 0;
+}
+.listsupport a{
+    color: #949caf !important;
+}
+.listsupport li{
+    padding: 10px 0;
+}
+.copyright{
+    margin-top: 40px;
+    background: #06090f;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    color: #949caf;
+}
+.categoryhot{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+.contentfootercontainer{
+    display: flex;
+    gap: 15px;
+}
+.policy{
+    flex: 1;
+    display: flex;
+    justify-content: end;
+}
+@media (max-width:1430px){
+    .footer{
+        padding: 10px;
+    }
+}
+@media(max-width:1400px){
+    .titlefooter{
+        padding: 20px 20px;
+    }
+    .copyright{
+        padding: 20px 15px;
+    }
+}
+
+@media(max-width:850px){
+    .categoryhot{
+        width: 100%;
+        margin-top: 30px;
+    }
+    .support{
+        width: 100%;
+        margin-top: 30px;
+    }
+    .contentfooter{
+        padding: 0 15px;
+    }
+    .contentfootercontainer{
+        display: flex;
+        flex-direction: column;
+    }
+    .copyright>div{
+        flex-direction: column;
+    }
+    .policy{
+        margin-top: 20px;
+        justify-content: center;
+    }
+    .rights{
+        text-align: center;
+    }
+}
+
+@media(max-width: 420px){
+    .titlefooter img{
+        width: 50px !important;
+    }
+}

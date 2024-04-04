@@ -1,0 +1,81 @@
+@font-face {
+  font-family: 'birds-paradise';
+  src: url("./assets//fonts/Birds_of_Paradise.ttf"); 
+}
+
+@font-face {
+  font-family: 'outrun-bold';
+  src: url("./assets/fonts/Outrun_future.otf"); 
+}
+
+:root {
+  --bg-root: #131720;
+  --bg-main: #12151d;
+  --bg-btn: rgb(36, 186, 239);
+  --bg-adminroot:#232339;
+  --bg-admin: #22d3ee;
+  --bg-secondary: #2a2d36;
+  --text-secondary: #949caf;
+  --max-width: 1100px;
+  --border-radius: 12px;
+  --font-birds: 'birds-paradise';
+  --font-bold: 'outrun-bold';
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+}
+body{
+  background: var(--bg-root) !important;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+a{
+  text-decoration: none !important;
+}
+.flex-1{
+  flex: 1;
+}
+.w-80{
+  width: 80%;
+}
+.w-40{
+  width: 40%;
+}
+.w-30{
+  width: 30%;
+}
+.text-secondary{
+  color: #949caf !important;
+}
+.dropdown-item:hover{
+  background: var(--bg-secondary) !important;
+}
+/* Custom Prime React */
+.p-sidebar{
+  background: var(--bg-root);
+}
+.p-dialog-content, .p-dialog-header{
+  background: var(--bg-root);
+}
+.p-dropdown-items{
+  padding-left: 5px !important;
+}
+.p-dialog-footer{
+  padding-top: 15px;
+}
+.p-tabview-nav{
+  padding-left: 0;
+}
+.p-tabview-panels{
+  background: transparent;
+}
+.p-datatable-header, .p-toolbar, .p-paginator{
+  background: var(--bg-adminroot);
+}
+.p-datatable .p-datatable-thead > tr > th, tr{
+  background: var(--bg-adminroot);
+}
+.admin .p-sidebar-content, .admin .p-sidebar-header{
+  background: #2c2c45 !important;
+}

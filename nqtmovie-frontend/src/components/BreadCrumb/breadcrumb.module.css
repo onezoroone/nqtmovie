@@ -1,0 +1,30 @@
+.breadcrumb {
+    font-size: 16px;
+    background: var(--bg-main);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline !important;
+    color: #fff !important;
+}
+
+.breadcrumb span {
+    margin: 0 5px;
+    color: #949caf !important;
+}
+.icon::before{
+    content: "\F285";
+    display: inline-block;
+    font-family: bootstrap-icons!important;
+    font-style: normal;
+    font-weight: 400!important;
+    font-feature-settings: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    vertical-align: -.125em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

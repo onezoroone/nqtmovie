@@ -1,0 +1,122 @@
+.description{
+    color: rgb(206, 206, 203);
+    min-height: 50vh;
+}
+.description a{
+    color: #fff;
+}
+.btn{
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: none;
+    color: rgb(206, 206, 203);
+}
+.btn:hover{
+    color: #fff;
+}
+.dots::before{
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #22d3ee;
+    left: -2px;
+    top: 50%;
+    margin-top: -3px;
+}
+.bgepisode{
+    background: rgba(255,255,255,.3);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+.casts{
+    margin-bottom: 20px;
+}
+.containerbtn{
+    display: flex;
+    gap: 10px;
+}
+.btnWatch{
+    background: var(--bg-btn);
+    padding: 15px 20px;
+    border-radius: 10px;
+    text-transform: uppercase;  
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 60px;
+    width: 150px;
+}
+.btnWatch:hover{
+    background: rgb(36, 186, 239, 0.8);
+}
+.btnWatch i , .btnContinue i, .btnTrailer i{
+    font-size: 20px;
+}
+.btnContinue{
+    background: transparent;
+    padding: 15px 20px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    text-transform: uppercase;
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    height: 60px;
+    width: 140px;
+}
+.btnContinue:hover{
+    opacity: 0.8;
+}
+.btnTrailer{
+    background: gray;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    height: 60px;
+    width: 120px;
+}
+.btnTrailer:hover{
+    background: rgb(128, 128, 128, 0.8);
+}
+.btnWatchList{
+    background: transparent;
+    padding: 15px 20px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-transform: uppercase;
+    height: 60px;
+    width: 140px;
+}
+.btnWatchList:hover{
+    opacity: 0.8;
+}
+.episode{
+    background: rgba(255,255,255,.3);
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+.episode:hover{
+    background: rgba(255,255,255,.5);
+}
+@media (max-width:991px){
+    .description{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+@media(max-width:767px){
+    .containerbtn{
+        flex-direction: column;
+        align-items: center;
+    }
+}

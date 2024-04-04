@@ -1,0 +1,237 @@
+.carouselContainer{
+    width: 100%;
+    position: relative;
+}
+.carouselContainer a{
+    color: #fff;
+}
+.image{
+    width: 100%;
+    height: auto;
+    opacity: 0.8;
+    object-position: center;
+    filter: contrast(1.2);
+}
+.itemCarousel{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+.activeItem{
+    width: 100%;
+    animation: fadeIn 1.5s ease-in-out;
+}
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+.container{
+    position: relative;
+    width: 100%;
+    height: 0;
+    display: flex;
+    justify-content: center;
+    animation: fadeInAnimation 1s linear forwards;
+}
+@keyframes fadeInAnimation {
+    from {
+        height: 0;
+    }
+    to {
+        height: 70vh;
+    }
+}
+.carouselContent{
+    max-width: 1400px;
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+.title{
+    font-weight: 700;
+    line-height: 1.1;
+    font-size: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 5px;
+}
+.leftcontent{
+    width: 500px;
+}
+.rightcontent{
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-end;
+    padding-bottom: 50px;
+}
+.details{
+    color: #fff;
+    margin-top: 30px;
+}
+.details b{
+    margin: 0 10px;
+}
+.btn{
+    background: var(--bg-btn);
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    z-index: 2;
+}
+.btn:hover{
+    background: rgb(36, 186, 239, 0.7);
+}
+.playlist{
+    background: transparent;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 10px;
+    padding: 20px 40px;
+    border: 1px solid #fff;
+}
+
+.dotscarousel{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    transition: all 0.5s linear;
+}
+.dotscarousel img{
+    height: 120px;
+}
+.dots{
+    cursor: pointer;
+    max-width: 220px;
+}
+.dots img{
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.dots.active{
+    border: 5px solid #fff;
+}
+
+.buttonPrev span, .buttonNext span{
+    display: none;
+}
+.buttonPrev, .buttonNext{
+    position: absolute;
+    border-radius: 50%;
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #fff;
+    top: 50%;
+    color: #fff;
+    visibility: hidden;
+}
+.buttonPrev{
+    left: 10px;
+}
+.buttonNext{
+    right: 10px;
+}
+
+@media (max-height: 700px) and (min-height:551px){
+    .dots img{
+        height: 100px;
+    }
+}
+@media(max-height:550px){
+    .dots img{
+        height: 80px;
+    }
+}
+
+@media (max-width: 1420px) and (min-width: 1201px){
+    .leftcontent{
+        padding-left: 40px;
+    }
+    .rightcontent{
+        padding-right: 40px;
+    }
+}
+@media (max-width: 1200px){
+    .carouselContent{
+        top: -150px;
+    }
+    .leftcontent{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .rightcontent{
+        width: 100%;
+        overflow: hidden;
+    }
+    .rightcontent h4{
+        padding-left: 40px;
+    }
+    .dotscarousel{
+        display: flex;
+        width: 100%;
+    }
+    .dotscarousel .dots {
+        flex: 0 0 calc(100% / 5);
+        width: 100%;
+    }
+    .buttonPrev, .buttonNext{
+        visibility: visible;
+    }
+    .title{
+        white-space: unset;
+        text-align: center;
+        padding-top: 50px;
+    }
+    .details{
+        text-align: center;
+    }
+}
+@media (max-width: 767px){
+    .dotscarousel .dots {
+        flex: 0 0 calc(100% / 4);
+    }
+}
+@media(max-width:575px){
+    .dotscarousel .dots {
+        flex: 0 0 calc(100% / 3);
+    }
+}
+
+@media(max-width:450px){
+    .dotscarousel{
+        padding-left: 5px;
+    }
+    .dotscarousel .dots {
+        flex: 0 0 48%;
+    }
+    .buttonNext, .buttonPrev{
+        top: 55%;
+    }
+}
+
+/* @media(max-height:650px){
+    .dots{
+        max-width: 170px;
+    }
+} */

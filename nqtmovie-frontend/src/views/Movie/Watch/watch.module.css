@@ -1,0 +1,118 @@
+.container{
+    max-width: 1400px;
+    width: 100%;
+    padding: 10px;
+    position: relative;
+}
+.container a{
+    color: #fff;
+}
+.MoreMovie{
+    color: #fff;
+    margin-top: 20px;
+}
+.MoreMovie h4{
+    font-family: var(--font-bold);
+}
+.MoreMovie div{
+    font-size: 16px;
+}
+.MoreMovie span{
+    margin: 0 10px;
+}
+.suggesttitle{
+    color: #fff;
+    margin-top: 10px;
+    display: none;
+}
+.titleReviews{
+    color: #Fff;
+}
+.titleReviews b{
+    color: var(--bg-btn);
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--bg-btn);
+}
+.titleReviewsContainer{
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--bg-secondary);
+}
+.titleReviews i{
+    margin: 0 15px;
+}
+.morereviews{
+    color: #fff;
+    position: relative;
+    padding: 30px 0;
+    display: flex;
+    align-items: center;
+}
+.morereviews span::after{
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 1px;
+    background: var(--bg-secondary);
+    width: calc(100% - 180px);
+    margin-left: 180px;
+}
+.reviewsContainer{
+    color: #fff;
+}
+.formReviews{
+    padding: 20px;
+    background-color: #0a0d14;
+    border-radius: 5px;
+    display: flex;
+    gap: 30px;
+}
+.bodyReviews{
+    margin-top: 15px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.headbodyReviews{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid var(--bg-secondary);
+    padding-bottom: 10px;
+}
+.headbodyReviews b{
+    color: #fff;
+}
+.contentBodyReviews{
+    margin-top: 10px;
+}
+
+.formReviews textarea{
+    background: var(--bg-root);
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    height: 150px;
+    width: 100%;
+}
+.formReviews select{
+    background: var(--bg-root);
+    width: 150px;
+    height: 40px;
+    border: none;
+    padding-left: 15px;
+    border-radius: 10px;
+}
+.btnSubmitReviews{
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    background: var(--bg-btn);
+    color: #fff;
+}
+@media(max-width: 1000px){
+    .suggesttitle{
+        display: block;
+    }
+}
