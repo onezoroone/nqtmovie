@@ -19,8 +19,9 @@ function Episodes() {
     const [server, setServer] = useState(null);
     const [episodes, setEpisodes] = useState(null);
     const [globalFilter, setGlobalFilter] = useState(null);
-    const [selectedMovies, setSelectedMovies] = useState(null);
+    const [selectedEpisodes, setSelectedEpisodes] = useState(null);
     const [deleteEpisodeDialog, setDeleteEpisodeDialog] = useState(false);
+    const [deleteEpisodesDialog, setDeleteEpisodesDialog] = useState(false);
     const [episodeDialog, setEpisodeDialog] = useState(false);
     const [episode, setEpisode] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -122,7 +123,7 @@ function Episodes() {
             <div className="d-flex flex-wrap gap-2">
                 <Button label="Thêm" icon="bi bi-plus" className='text-white rounded-3' severity="success" onClick={openNewDialog} />
                 <Button label="Thêm nhiều" icon="bi bi-plus" className='text-white rounded-3' severity="success" onClick={newManyDialog} />
-                <Button label="Xóa" className='text-white rounded-3' icon="bi bi-trash" severity="danger" disabled  />
+                <Button label="Xóa" className='text-white rounded-3' icon="bi bi-trash" severity="danger" disabled={selectedEpisodes && selectedEpisodes.length != 0 ? false : true} onClick={confirmDeleteSelected} />
                 <Button label="NGUONC" className='text-white rounded-3' icon="bi bi-fast-forward-fill" severity="primary" onClick={crawlNguonc} />
                 <Button label="OPHIM" className='text-white rounded-3' icon="bi bi-fast-forward-fill" severity="help" onClick={crawlOphim} />
             </div>
@@ -141,6 +142,26 @@ function Episodes() {
         setLoading(false);
         setDeleteEpisodeDialog(false);
     }
+
+    const confirmDeleteSelected = () => {
+        setDeleteEpisodesDialog(true);
+    };
+
+    const deleteSelectedEpisodes = async () => {
+        setLoading(true);
+        for(var i=0; i < selectedEpisodes.length; i++){
+            await axiosClient.post("/episodes/deleteEpisode",{
+                idEpisode: selectedEpisodes[i].idEpisode,
+                serverName: selectedEpisodes[i].server
+            }).then((response => {
+                toast.current.show({severity:'success', summary: 'Thành công', detail:response.data, life: 5000});
+            }))
+        }
+        setReload(!reload);
+        setLoading(false);
+        setDeleteEpisodesDialog(false);
+        setSelectedEpisodes(null);
+    };
 
     const handleNewEpisode = async () => {
         setLoading(true);
@@ -194,6 +215,7 @@ function Episodes() {
         setDeleteEpisodeDialog(false);
         setEpisodeDialog(false);
         setManyEpiDialog(false);
+        setDeleteEpisodesDialog(false);
     };
 
     const deleteEpisodeDialogFooter = (
@@ -224,6 +246,13 @@ function Episodes() {
         </React.Fragment>
     )
 
+    const deleteEpisodesDialogFooter = (
+        <React.Fragment>
+            <Button label="Đóng" icon="bi bi-x" className='rounded-3' style={{marginRight:'10px'}} outlined onClick={hideDeleteEpisodeDialog} />
+            <Button label="Có" loading={loading} icon="bi bi-check" severity="danger" className='rounded-3' onClick={deleteSelectedEpisodes} />
+        </React.Fragment>
+    );
+
     return(
         <div>
             <Toast ref={toast} />
@@ -236,7 +265,7 @@ function Episodes() {
             <div className="d-flex justify-content-center mb-4">
                 <SelectButton value={server} onChange={(e) => {setServer(e.value); setEpisodes(e.value.episodes)}}  optionLabel="server" options={data.data} />
             </div>
-            <DataTable selection={selectedMovies} onSelectionChange={(e) => setSelectedMovies(e.value)}
+            <DataTable selection={selectedEpisodes} onSelectionChange={(e) => setSelectedEpisodes(e.value)}
                 header={header} paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                 currentPageReportTemplate="Đang hiển thị {first} đến {last} của {totalRecords} tập phim" globalFilter={globalFilter} value={episodes}>
@@ -292,6 +321,13 @@ function Episodes() {
                             Bạn có chắc chắn muốn xóa tập <b>{episode.ep_number}</b>?
                         </span>
                     )}
+                </div>
+            </Dialog>
+
+            <Dialog visible={deleteEpisodesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Xác nhận" modal footer={deleteEpisodesDialogFooter} onHide={hideDeleteEpisodeDialog}>
+                <div className="confirmation-content">
+                    <i className="bi bi-exclamation-triangle" style={{ fontSize: '2rem', marginRight:'15px' }} />
+                    <span>Bạn có chắc chắn muốn các tập đã chọn?</span>
                 </div>
             </Dialog>
         </div>

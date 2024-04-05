@@ -94,12 +94,16 @@ class MovieController extends Controller
         $category = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->first();
         $related = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->where('idCategory',$category->idCategory)
         ->where('idMovie','!=',$movie->id)->limit(10)->get();
-        $history = null;
+        $history = [];
         if(Auth::check()){
             $user = Auth::user();
-            $check = DB::table('history_watch')->join('episodes','episodes.id','=','history_watch.idEpisode')->where('history_watch.idMovie', $movie->id)->where('idUser', $user->id)->first();
+            $check = DB::table('history_watch')->where('idMovie', $movie->id)->where('idUser', $user->id)->first();
             if($check){
-                $history = $check;
+                $watched = explode(",", $check->idEpisode);
+                foreach($watched as $item){
+                    $episode = DB::table('episodes')->where('id', $item)->first()->slug;
+                    $history[] = $episode;
+                }
             }
         }
         $rating = DB::table('reviews')->where('idMovie', $movie->id)->avg('rating');
@@ -159,19 +163,28 @@ class MovieController extends Controller
         $episodes = DB::table('episodes')->where('idMovie',$movie->id)->orderByRaw("LPAD(ep_number, $maxDigits, '0') DESC")->get();
         $category = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->first();
         $related = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->where('idCategory',$category->idCategory)
-        ->where('idMovie','!=',$movie->id)->limit(6)->get();
+        ->where('idMovie','!=',$movie->id)->limit(10)->get();
+        $history = [];
         if(Auth::check()){
             $user = Auth::user();
             $check = DB::table('history_watch')->where('idUser', $user->id)->where('idMovie', $movie->id)->first();
             if($check){
-                DB::table('history_watch')->where('idUser', $user->id)->where('idMovie', $movie->id)->update([
-                    'idEpisode' => $episode[0]->idEpisode
-                ]);
+                $episodesWatched =  explode(",", $check->idEpisode);
+                if(!in_array($episode[0]->idEpisode, $episodesWatched)){
+                    $episodesWatched[] = $episode[0]->idEpisode;
+                    DB::table('history_watch')->where('idUser', $user->id)->where('idMovie', $movie->id)->update([
+                        'idEpisode' => implode(",", $episodesWatched),
+                        'updated_at' => now()
+                    ]);
+                }
+                $history = $episodesWatched;
             }else{
                 DB::table('history_watch')->insert([
                     'idMovie' => $movie->id,
                     'idUser' => $user->id,
-                    'idEpisode' => $episode[0]->idEpisode
+                    'idEpisode' => $episode[0]->idEpisode,
+                    'created_at' => now(),
+                    'updated_at' => now()
                 ]);
             }
         }
@@ -186,7 +199,8 @@ class MovieController extends Controller
             'currentEpisode' => $episode,
             'related' => $related,
             'categories' => $categories,
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'history' => $history
         ], 200);
     }
 
@@ -399,19 +413,6 @@ class MovieController extends Controller
         return response()->json("Delete successful ".$request->name, 200);
     }
 
-    public function test(){
-        $client = new Client();
-        $response = $client->request('GET', 'https://subnhanh.moe/xem-phim/nu-hoang-nuoc-mat-queen-of-tears-2024-vietsub-tap-1.html');
-        $content = $response->getBody()->getContents();
-        // $dataArray = json_decode($content, true);
-        // $test = [];
-        // foreach($dataArray['episodes'][0]['server_data'] as $item){
-        //     $test[] = $item['name'];
-        // }
-        // $abc = $dataArray['movie']['country'][0]['name'];
-        dd($content);
-    }
-
     public function UpView($movie){
         $id = $movie->id;
         DB::table('movies')->where('id', $id)->update(['views' => $movie->views + 1]);
@@ -525,7 +526,7 @@ class MovieController extends Controller
         ->join('episodes','episodes.id','=','history_watch.idEpisode')
         ->where('idUser', $user->id)
         ->select('movies.slug', 'movies.name','img','ep_number','episodes.slug as slugEpi')
-        ->orderByDesc('history_watch.created_at')->get();
+        ->orderByDesc('history_watch.updated_at')->get();
         return response()->json(['watchlist' => $list, 'historylist' => $history], 200);
     }
 
@@ -546,13 +547,46 @@ class MovieController extends Controller
             DB::raw('SUM(IF(verified = "true", 1, 0)) AS verified_count')
         )
         ->first();
+
+        $weekStartDate = Carbon::now()->startOfWeek();
+        $weekEndDate = Carbon::now()->endOfWeek();
+        $today = DB::table('daily_rankings')->select(DB::raw("DATE_FORMAT(created_at, '%d/%m') AS day"), DB::raw('SUM(views) AS total'), DB::raw('count(idMovie) AS count'))
+        ->whereRaw('YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1)')
+        ->groupBy(DB::raw('day'))
+        ->orderBy('day')
+        ->get();
+        $missingDays = [];
+        for ($date = $weekStartDate; $date->lte($weekEndDate); $date->addDay()) {
+            $day = $date->format('d/m');
+            $total = 0;
+            $count = 0;
+            foreach ($today as $movie) {
+                if ($movie->day == $day) {
+                    $total = $movie->total;
+                    $count = $movie->count;
+                    break;
+                }
+            }
+
+            $missingDays[] = ['day' => $day, 'total' => $total, 'count' => $count];
+        }
         return response()->json([
             'sumMovies' => $sumMovies,
             'sumUser' => $sumUser,
             'sumReviews' => $sumReviews,
             'sumCategories' => $sumCategories,
             'users' => $users,
-            'movies' => $movies
+            'movies' => $movies,
+            'total_views' => $missingDays
+        ], 200);
+    }
+
+    public function getNotifications(){
+        $countReports = DB::table('reports')->where('fixed', 'False')->count();
+        $countRequests = DB::table('movies_request')->where('status', 'N')->count();
+        return response()->json([
+            'countReports' => $countReports,
+            'countRequests' => $countRequests
         ], 200);
     }
 

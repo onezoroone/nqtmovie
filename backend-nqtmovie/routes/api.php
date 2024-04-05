@@ -48,9 +48,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('categories/newCategory', [CategoryController::class, 'store']);
         // Dashboard
         Route::get('movies/getAllIndex', [MovieController::class, 'getDashboard']);
+        Route::get('getNotifications', [MovieController::class, 'getNotifications']);
         // Request
         Route::get('requests/getAllRequests', [RequestMovieController::class, 'index']);
         Route::post('requests/deleteRequest', [RequestMovieController::class, 'destroy']);
+        Route::post('requests/updateRequest', [RequestMovieController::class, 'update']);
         // Reports
         Route::get('reports/getAllReports', [ReportController::class, 'index']);
         Route::post('reports/editReport', [ReportController::class, 'update']);
@@ -61,23 +63,23 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('episodes/crawlEpisodeOphim', [EpisodeController::class, 'crawlEpisodeOphim']);
         Route::post('episodes/crawlEpisodeNguonc', [EpisodeController::class, 'crawlEpisodeNguonc']);
     });
-    // Movie Private and Public
+    // User
     Route::post('/user/logout', [AuthController::class, 'logout']);
-    Route::get('/test', [MovieController::class, 'test1']);
+    // Movie Private and Public
     Route::get('/movie/getMovie/{slug}', [MovieController::class, 'getDetailsMovie']);
     Route::get('/movie/getEpisodeByMovie/{slug}/{episode}', [MovieController::class, 'getEpisodeByMovie']);
     // Reviews
     Route::post('reviews/createReview', [ReviewController::class, 'store']);
     Route::get('reviews/getReviewsByMovie/{id}', [ReviewController::class, 'getReviewsByMovie']);
-
     // Watch List
     Route::post('movies/addWatchList', [MovieController::class, 'addWatchList']);
     Route::get('movies/getWatchList', [MovieController::class, 'getWatchList']);
+    // Request
+    Route::post('requests/createRequest', [RequestMovieController::class, 'store']);
 });
 // Layout
 Route::get('movie/fetchData', [MovieController::class, 'index']);
 Route::get('movie/fetchDataLayout', [MovieController::class, 'getDataLayout']);
-
 // Filter
 Route::get('movies/getMovieByType/{type}', [MovieController::class, 'getMovieByType']);
 Route::get('movies/getFilter', [MovieController::class, 'getFilter']);
@@ -88,7 +90,6 @@ Route::post('user/login', [AuthController::class, 'login']);
 Route::post('user/forgotPassword', [UserController::class, 'forgotPassword']);
 Route::post('user/changePassword', [UserController::class, 'changePassword']);
 Route::post('reports/createReport', [ReportController::class, 'store']);
-Route::post('requests/createRequest', [RequestMovieController::class, 'store']);
 // Server
 Route::get('movie/getMovieServer/{slug}', [MovieController::class, 'getMovieServer']);
 Route::get('movie/getEpisodeByMovieServer/{slug}/{episode}', [MovieController::class, 'getEpisodeServer']);

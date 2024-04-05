@@ -14,7 +14,7 @@ function ListReports() {
     const [editReport, setEditReport] = useState(false);
     const [report, setReport] = useState({});
     const [selectedCategories, setSelectedCategories] = useState(null);
-    const {toast} = useStateContext();
+    const {toast, setCountReports} = useStateContext();
     const dt = useRef(null);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
@@ -44,6 +44,7 @@ function ListReports() {
             fixed: ingredient
         }).then((response) => {
             toast.current.show({severity:'success', summary: 'Thành công', detail:response.data, life: 3000});
+            setCountReports(count => count - 1);
         }).catch(() => {
             toast.current.show({severity:'error', summary: 'Thất bại', detail:"Lỗi gì đó", life: 3000});
         })

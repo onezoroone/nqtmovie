@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import styles from "./template.module.css";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,29 +14,12 @@ import { Toast } from 'primereact/toast';
 function IframeTemplate({data}) {
     const router = useNavigate();
     const [active, setActive] = useState(false);
-    const [watchedEpisodes, setWatchedEpisodes] = useState([]);
     const [server, setServer] = useState(0);
     const [visible, setVisible] = useState(false);
     const [position, setPosition] = useState('center');
     const [value, setValue] = useState('');
     const toast = useRef(null);
-    useEffect(() => {
-        const storedEpisodes = JSON.parse(localStorage.getItem('watchedEpisodes'));
-        if (storedEpisodes) {
-            setWatchedEpisodes(storedEpisodes);
-            if(!storedEpisodes.includes(data.currentEpisode[0].idEpisode)) {
-                const newWatchedEpisodes = [...storedEpisodes, data.currentEpisode[0].idEpisode];
-                setWatchedEpisodes(newWatchedEpisodes);
-                localStorage.setItem('watchedEpisodes', JSON.stringify(newWatchedEpisodes));
-            }
-        }
-    },[])
-    const handleChangeEp = (slug, episode, idEp) => {
-        if(!watchedEpisodes.includes(idEp)) {
-            const newWatchedEpisodes = [...watchedEpisodes, idEp];
-            setWatchedEpisodes(newWatchedEpisodes);
-            localStorage.setItem('watchedEpisodes', JSON.stringify(newWatchedEpisodes));
-        }
+    const handleChangeEp = (slug, episode) => {
         router(`/${slug}/${episode}`);
     }
     const responsive = {
@@ -104,7 +87,7 @@ function IframeTemplate({data}) {
                 <div className="position-absolute d-flex justify-content-lg-end gap-2" style={{top:'0', right:'0'}}>
                     <button onClick={() => show('top')} className={`${styles.extension}`}><span>Báo Cáo</span><i className="bi bi-flag"></i></button>
                     {!active ? <button onClick={() => setActive(!active)} className={`${styles.extension} ${styles.btnExpand}`}>Phóng To<i className="bi bi-arrows-fullscreen"></i></button> : <button onClick={() => setActive(!active)} className={styles.extension}>Thu Nhỏ<i className="bi bi-arrows-fullscreen"></i></button> }
-                    {data.episodes[0].ep_number != data.currentEpisode[0].ep_number && <Link to={`/${data.movie.slug}/tap-${parseInt(data.currentEpisode[0].ep_number) + 1}`} className={styles.extension}><span>Tập Tiếp</span><i className="bi bi-chevron-double-right"></i></Link>}
+                    {data.episodes[0].ep_number != data.currentEpisode[0].ep_number && <Link to={`/${data.movie.slug}/${data.episodes[data.episodes.findIndex(episode => episode.ep_number === data.currentEpisode[0].ep_number) - 1].slug}`} className={styles.extension}><span>Tập Tiếp</span><i className="bi bi-chevron-double-right"></i></Link>}
                 </div>
                 <Dialog header={`Báo cáo phim ' ${data.movie.name} ' tập ${data.currentEpisode[0].ep_number}`} position={position} breakpoints={{ '960px': '75vw', '641px': '90vw' }} draggable={false} footer={footerContent} resizable={false} visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
                     <p className="m-0">
@@ -116,12 +99,12 @@ function IframeTemplate({data}) {
         <div className={`col-lg-3 ${active && styles.active} p-0`}>
             <div className={`${styles.boxepisodes} ${active && "d-none"}`}>
                 {data.episodes.map((item, index) => (
-                <div onClick={() => handleChangeEp(data.movie.slug, item.slug, item.id)} className={`${styles.itemEpisode} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisode}`} key={index}>
+                <div onClick={() => handleChangeEp(data.movie.slug, item.slug)} className={`${styles.itemEpisode} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisode}`} key={index}>
                     <div className={styles.thumbnail}>
                         <img src={data.movie.poster} className={styles.imgepisode} alt={data.movie.name} />
                         <div className={styles.timeThumbnail}>{data.movie.time}</div>
                     </div>
-                    <span className={watchedEpisodes.includes(item.id) ? 'text-secondary' : 'text-white'}>Tập {item.ep_number}</span>
+                    <span data-id={item.id} className={data.history.includes((item.id).toString()) ? 'text-secondary' : 'text-white'}>Tập {item.ep_number}</span>
                 </div>
                 ))}
             </div>
@@ -131,7 +114,7 @@ function IframeTemplate({data}) {
                     <h3 className="text-white">Danh sách tập</h3>
                     <div className={`${styles.containerepispde}`}>
                         {data.episodes.map((item, index) => (
-                            <div style={{cursor:'pointer'}} onClick={() => handleChangeEp(data.movie.slug, item.slug, item.id)} className={`${styles.moreEpisode} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisodeMore}`}  key={index}>
+                            <div style={{cursor:'pointer'}} onClick={() => handleChangeEp(data.movie.slug, item.slug)} className={`${data.history.includes((item.id).toString()) ? 'text-secondary' : 'text-white'} ${styles.moreEpisode} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisodeMore}`}  key={index}>
                                 {item.ep_number}
                             </div>
                         ))}
@@ -139,13 +122,13 @@ function IframeTemplate({data}) {
                 </div>}
                 <Carousel infinite={true} responsive={responsive}>
                     {data.episodes.map((item, index) => (
-                        <div onClick={() => handleChangeEp(data.movie.slug, item.slug, item.id)} className={`${styles.boxepisodesMobileItem} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisodeMobile}`} key={index}>
+                        <div onClick={() => handleChangeEp(data.movie.slug, item.slug)} className={`${styles.boxepisodesMobileItem} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisodeMobile}`} key={index}>
                             <div className="position-relative">
                                 <img className={styles.imgMobile} src={data.movie.poster} alt={data.movie.name} />
                                 <span className={`${styles.timeThumbnail} text-white fs-6`}>{data.movie.time}</span>
                             </div>
                             <div className={styles.titleEpisodesBox}>
-                                <span className={watchedEpisodes.includes(item.id) ? 'text-secondary' : 'text-white'}>Tập {item.ep_number}</span>
+                                <span className={data.history.includes((item.id).toString()) ? 'text-secondary' : 'text-white'}>Tập {item.ep_number}</span>
                             </div>
                         </div>
                     ))}

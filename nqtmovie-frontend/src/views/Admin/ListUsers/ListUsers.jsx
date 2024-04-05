@@ -1,4 +1,3 @@
-import { getAllUser } from "../../../libs/data";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
@@ -13,6 +12,7 @@ import { Helmet } from "react-helmet";
 import { Dropdown } from "primereact/dropdown";
 import axiosClient from "../../../axios-client"
 import { InputSwitch } from "primereact/inputswitch";
+import { useEffect } from "react";
 function ListUsers() {
     const [userDialog, setUserDialog] = useState(false);
     const [resetDialog, setResetDialog] = useState(false);
@@ -26,9 +26,18 @@ function ListUsers() {
     const [loading, setLoading] = useState(false);
     const [selectedRole, setSelectedRole] = useState(null);
     const [checked, setChecked] = useState(false);
-    const {data, isLoading} = getAllUser();
-    if(isLoading) return <Loading />
-
+    const [data, setData] = useState(null);
+    const [reload, setReload] = useState(false);
+    useEffect(() => {
+        const fetch = async () => {
+            await axiosClient.get("/users/getAllUser")
+            .then((res) => {
+                setData(res.data);
+            })
+        }
+        fetch();
+    }, [reload]);
+    if(!data) return <Loading />
     const hideDialog = () => {
         setUserDialog(false);
         setResetDialog(false);
@@ -47,14 +56,16 @@ function ListUsers() {
         await axiosClient.post("/users/updateRole",{
             id: user.id,
             name: user.name,
-            checked,
+            checked: checked ? "true" : "false",
             role: selectedRole.name
         }).then((response) => {
             toast.current.show({severity:'success', summary: 'Thành công', detail:response.data, life: 3000});
+            setReload(!reload);
         }).catch((err) => {
             toast.current.show({severity:'error', summary: 'Thất bại', detail:err.response.data, life: 3000});
+        }).finally(() => {
+            setLoading(false);
         })
-        setLoading(false);
         setUserDialog(false);
     };
 

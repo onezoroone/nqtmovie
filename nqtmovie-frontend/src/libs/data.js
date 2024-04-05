@@ -29,12 +29,3 @@ export function getDataLayout () {
     isError: error
   }
 }
-
-export function getAllUser() {
-  const { data ,isLoading } = useSWR(`${import.meta.env.VITE_API_BASE_URL}/api/users/getAllUser`, fetcher)
-  
-  return {
-    data: data,
-    isLoading
-  }
-}

@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { Toast } from 'primereact/toast';
 import axiosClient from "../../../axios-client";
 import {Button} from "primereact/button";
+import { Rating } from "primereact/rating";
 function WatchMovie() {
     const {slug, episode} = useParams();
     const [rating, setRating] = useState("null");
@@ -149,7 +150,9 @@ function WatchMovie() {
                             <div className={styles.headbodyReviews}>
                                 <i className="fs-1 bi bi-person-circle"></i>
                                 <div className="d-flex flex-column">
-                                    <b>{item.name}</b>
+                                    <div className="d-flex gap-2">
+                                        <b>{item.name}</b><Rating value={item.rating} readOnly cancel={false} />
+                                    </div>
                                     <span>{item.created_at}</span>
                                 </div>
                             </div>

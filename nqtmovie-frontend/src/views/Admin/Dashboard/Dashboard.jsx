@@ -27,8 +27,11 @@ function Dashboard() {
             await axiosClient.get("/movies/getAllIndex")
             .then((res) => {
                 setData(res.data);
+                let days = res.data.total_views.map(view => view.day);
+                let totals = res.data.total_views.map(view => view.total);
+                let count = res.data.total_views.map(view => view.count);
                 const data = {
-                    labels: ['Not active', 'Active'],
+                    labels: ['Chưa kích hoạt', 'Đã kích hoạt'],
                     datasets: [
                         {
                             data: [res.data.users.unverified_count, res.data.users.verified_count],
@@ -44,66 +47,65 @@ function Dashboard() {
                     ]
                 }
                 setChartData(data);
+                const textColor = documentStyle.getPropertyValue('--text-color');
+                const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+                const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+                const data1 = {
+                    labels: days,
+                    datasets: [
+                        {
+                            label: 'Tổng lượt xem',
+                            backgroundColor: documentStyle.getPropertyValue('--custom-color'),
+                            borderColor: documentStyle.getPropertyValue('--custom-color'),
+                            data: totals
+                        },
+                        {
+                            label: 'Tổng số phim đã được xem',
+                            backgroundColor: documentStyle.getPropertyValue('--purple-500'),
+                            borderColor: documentStyle.getPropertyValue('--purple-500'),
+                            data: count
+                        }
+                    ]
+                };
+                const options1 = {
+                    maintainAspectRatio: false,
+                    aspectRatio: 0.8,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                fontColor: textColor
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: textColorSecondary,
+                                font: {
+                                    weight: 500
+                                }
+                            },
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: textColorSecondary
+                            },
+                            grid: {
+                                color: surfaceBorder,
+                                drawBorder: false
+                            }
+                        }
+                    }
+                };
+                setChartData1(data1);
+                setChartOptions1(options1);
             })
         }
         fetch();
-        const textColor = documentStyle.getPropertyValue('--text-color');
-        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-        const data1 = {
-            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            datasets: [
-                {
-                    label: 'Total views',
-                    backgroundColor: documentStyle.getPropertyValue('--gray-500'),
-                    borderColor: documentStyle.getPropertyValue('--gray-500'),
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                },
-                {
-                    label: 'Total movies watched',
-                    backgroundColor: documentStyle.getPropertyValue('--purple-500'),
-                    borderColor: documentStyle.getPropertyValue('--purple-500'),
-                    data: [28, 48, 40, 19, 86, 27, 90]
-                }
-            ]
-        };
-        const options1 = {
-            maintainAspectRatio: false,
-            aspectRatio: 0.8,
-            plugins: {
-                legend: {
-                    labels: {
-                        fontColor: textColor
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColorSecondary,
-                        font: {
-                            weight: 500
-                        }
-                    },
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    }
-                },
-                y: {
-                    ticks: {
-                        color: textColorSecondary
-                    },
-                    grid: {
-                        color: surfaceBorder,
-                        drawBorder: false
-                    }
-                }
-            }
-        };
-
-        setChartData1(data1);
-        setChartOptions1(options1);
     }, []);
     if(!data) return <Loading />
     return ( 

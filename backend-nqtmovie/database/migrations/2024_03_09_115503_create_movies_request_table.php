@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('movies_request', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('user');
+            $table->enum('status', ['Y', 'N'])->default('N');
             $table->timestamps();
         });
     }

@@ -76,7 +76,7 @@ function Description({movie, episodes, history, average, count}) {
                     <div className={styles.containerbtn}>
                         <div className="d-flex gap-2">
                             {episodes.length > 0 && <Link to={`/${movie.slug}/${episodes[episodes.length - 1].slug}`} className={styles.btnWatch}><i className="bi bi-play-circle"></i>Xem Ngay</Link>}
-                            {history && <Link to={`/${movie.slug}/${history.slug}`} className={styles.btnContinue}><i className="bi bi-play-circle"></i>Xem Tiếp</Link>}
+                            {history && history.length != 0 && <Link to={`/${movie.slug}/${history[history.length - 1]}`} className={styles.btnContinue}><i className="bi bi-play-circle"></i>Xem Tiếp</Link>}
                         </div>
                         <div className="d-flex gap-2">
                             <Link to="/" className={styles.btnTrailer}><i className="bi bi-play-circle"></i>Trailer</Link>

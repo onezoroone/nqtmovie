@@ -55,16 +55,6 @@ function LayoutAdmin() {
             icon: 'bi-tags-fill'
         },
         {
-            name: 'Phim siêu mật',
-            link: '/admin',
-            icon: 'bi-tv-fill'
-        },
-        {
-            name: 'Tìm phim',
-            link: '/admin',
-            icon: 'bi-search-heart-fill'
-        },
-        {
             name: 'Yêu cầu phim',
             link: '/admin/list-requests',
             icon: 'bi-send-fill'
@@ -72,7 +62,7 @@ function LayoutAdmin() {
         {
             name: 'Báo cáo phim',
             link: '/admin/list-reports',
-            icon: 'bi-flag-fill'
+            icon: 'bi-flag-fill',
         }
     ]
     const [active, setActive] = useState(0);
@@ -82,7 +72,7 @@ function LayoutAdmin() {
     const {setRole} = useStateContext();
     const [activeSidebar, setActiveSidebar] = useState(false);
     const [visible, setVisible] = useState(false);
-    const {toast} = useStateContext();
+    const {toast, countReports, countRequests, setCountReports, setCountRequests} = useStateContext();
     useEffect(()=>{
         const checkUser = async () => {
             await axiosClient.get("/user")
@@ -104,6 +94,20 @@ function LayoutAdmin() {
         if(screenWidth < 1200){
             setActiveSidebar(true);
         }
+        const getNotification = async () => {
+            await axiosClient.get("/getNotifications")
+            .then((res) => {
+                const reports = res.data.countReports;
+                const request = res.data.countRequests;
+                if(reports > 0 ){
+                    setCountReports(reports);
+                }
+                if(request > 0){
+                    setCountRequests(request);
+                }
+            })
+        }
+        getNotification();
     },[])
     useEffect(() => {
         if(location.pathname == "/admin/dashboard" || location.pathname == "/admin"){
@@ -119,9 +123,9 @@ function LayoutAdmin() {
         }else if(location.pathname == "/admin/categories"){
             setActive(5);
         }else if(location.pathname == "/admin/list-requests"){
-            setActive(8);
+            setActive(6);
         }else if(location.pathname == "/admin/list-reports"){
-            setActive(9);
+            setActive(7);
         }
         setVisible(false);
     },[location]);
@@ -170,6 +174,8 @@ function LayoutAdmin() {
                                 <Link to={item.link} {...(item.children && { "data-bs-toggle": "collapse" })}>
                                     <i className={`${styles.icon} bi ${item.icon}`}></i>
                                     <span>{item.name}</span>
+                                    {index == 6 && countRequests > 0 && <span className="badge bg-danger mt-1" style={{marginLeft:'10px'}}>{countRequests}</span>}
+                                    {index == 7 && countReports > 0 && <span className="badge bg-danger mt-1" style={{marginLeft:'10px'}}>{countReports}</span>}
                                     <span className="flex-1 d-flex justify-content-end">
                                         {item.children && <i className="bi bi-chevron-down"></i>}
                                     </span>
@@ -210,6 +216,8 @@ function LayoutAdmin() {
                                 <Link to={item.link} {...(item.children && { "data-bs-toggle": "collapse" })}>
                                     <i className={`${styles.icon} bi ${item.icon}`}></i>
                                     <span>{item.name}</span>
+                                    {index == 6 && countRequests > 0 && <span className="badge bg-danger mt-1" style={{marginLeft:'10px'}}>{countRequests}</span>}
+                                    {index == 7 && countReports > 0 && <span className="badge bg-danger mt-1" style={{marginLeft:'10px'}}>{countReports}</span>}
                                     <span className="flex-1 d-flex justify-content-end">
                                         {item.children && <i className="bi bi-chevron-down"></i>}
                                     </span>
@@ -230,7 +238,7 @@ function LayoutAdmin() {
                     <div className={styles.formSearch}>
                         <span className="p-input-icon-left">
                             <i className="bi bi-search fs-6" style={{marginTop:'-0.7rem'}} />
-                            <InputText className={styles.input} type="search" placeholder="Search..." />
+                            <InputText className={styles.input} type="search" placeholder="Tìm kiếm..." />
                         </span>
                     </div>
                     <div className="d-flex flex-1 justify-content-end align-items-center gap-2">

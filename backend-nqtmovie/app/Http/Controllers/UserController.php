@@ -30,7 +30,7 @@ class UserController extends Controller
             'role' => $request->role,
             'verified' => $request->checked
         ]);
-        return response()->json("Update Role Success For ".$request->name, 200);
+        return response()->json("Sửa vai trò cho ".$request->name, 200);
     }
 
     private function generateRandomSpecialCharacter() {

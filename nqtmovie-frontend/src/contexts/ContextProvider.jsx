@@ -12,6 +12,8 @@ export const ContextProvider =({children}) => {
     const toast = useRef(null);
     const [role, _setRole] = useState(localStorage.getItem('user'));
     const [user, _setUser] = useState(sessionStorage.getItem('user'));
+    const [countRequests, setCountRequests] = useState(0);
+    const [countReports, setCountReports] = useState(0);
     const setRole = (role) =>{
         _setRole(role)
         if(role) {
@@ -34,8 +36,12 @@ export const ContextProvider =({children}) => {
             role,
             toast,
             user,
+            countReports,
+            countRequests,
             setUser,
             setRole,
+            setCountRequests,
+            setCountReports
         }}>
             {children}
         </StateContext.Provider>

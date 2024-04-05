@@ -10,7 +10,7 @@ import { useStateContext } from '../../../contexts/ContextProvider';
 function ListRequests() {
     const [deleteRequest, setDeleteRequest] = useState(false);
     const [request, setRequest] = useState({});
-    const {toast} = useStateContext();
+    const {toast, setCountRequests} = useStateContext();
     const dt = useRef(null);
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
@@ -46,10 +46,26 @@ function ListRequests() {
         setDeleteRequest(false);
     }
 
+    const changeStatus = async (rq) => {
+        await axiosClient.post("/requests/updateRequest",{
+            id: rq.id,
+            status: 'Y'
+        }).then((response) => {
+            toast.current.show({severity:'success', summary: 'Thành công', detail:response.data, life: 3000});
+            setCountRequests(count => count - 1);
+        }).catch(() => {
+            toast.current.show({severity:'error', summary: 'Thất bại', detail:"Lỗi không biết.", life: 3000});
+        })
+        setReload(!reload);
+    }
+
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <Button icon="bi bi-trash" className="rounded-5" outlined severity="danger" onClick={() => confirmDelete(rowData)} />
+                <div className="d-flex gap-2">
+                    <Button icon="bi bi-check-lg" className="rounded-5" disabled={rowData.status != 'N' ? true : false} outlined severity="primary" onClick={() => changeStatus(rowData)} />
+                    <Button icon="bi bi-trash" className="rounded-5" outlined severity="danger" onClick={() => confirmDelete(rowData)} />
+                </div>
             </React.Fragment>
         );
     };
@@ -80,7 +96,9 @@ function ListRequests() {
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Đang hiển thị {first} đến {last} của {totalRecords} yêu cầu" header={header}>
                 <Column field="id" header="Mã"></Column>
-                <Column field="name" header="Phim" style={{ minWidth: '40rem' }}></Column>
+                <Column field="name" header="Phim"></Column>
+                <Column field="user" header="Người yêu cầu"></Column>
+                <Column field="status" header="Trạng thái"></Column>
                 <Column field="created_at" sortable header="Ngày yêu cầu"></Column>
                 <Column body={actionBodyTemplate}></Column>
             </DataTable>
