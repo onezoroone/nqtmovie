@@ -20,7 +20,7 @@ class ReviewController extends Controller
     public function getReviewsByMovie($id){
         $reviews = DB::table('reviews')->join('users','users.id','=','reviews.idUser')
         ->where('idMovie', $id)
-        ->select('idMovie', 'name', 'rating', 'reviews.created_at', 'review')
+        ->select('idMovie', 'name', 'avatar', 'rating', 'reviews.created_at', 'review')
         ->orderByDesc('reviews.created_at')->limit(5)
         ->get();
         return response()->json(['reviews' => $reviews], 200);

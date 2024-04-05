@@ -1,0 +1,134 @@
+.group h3{
+    padding-bottom: 12px;
+}
+.group h3::after{
+    content: "";
+    position: absolute;
+    height: 4px;
+    background: var(--bg-btn);
+    bottom: 0;
+    width: 100px;
+    left: 0;
+}
+.infoGroup h4{
+    border-left: 5px solid var(--bg-btn);
+    padding-left: 15px;
+    line-height: 1.5;
+}
+
+.gradient{
+    background: linear-gradient(45deg,#F17C58, #E94584, #24AADB , #27DBB1,#FFDC18, #FF3706);
+	background-size: 600% 100%;
+	animation: gradient 3s linear infinite;
+    border-radius: 50px;
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 17px;
+    text-transform: uppercase;
+    margin-top: 15px;
+}
+@keyframes gradient {
+    0% {background-position: 0%}
+    100% {background-position: 100%}
+}
+.normal{
+    margin-top: 15px;
+    background: var(--bg-btn);
+    border-radius: 50px;
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 17px;
+    text-transform: uppercase;
+}
+.groupChild{
+    border: 1px solid var(--bg-secondary);
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 15px;
+}
+.input{
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--bg-secondary);
+    border-radius: 5px;
+    margin-top: 7px;
+    background: var(--bg-secondary);
+}
+.input:focus{
+    outline: none;
+}
+.btn{
+    background: #3cd4ec;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 15px;
+}
+.btn:hover{
+    background: rgb(60, 212, 236, 0.8);
+}
+.preAvatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex;
+    background: var(--bg-secondary);
+    position: relative;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.plans{
+    width: 350px;
+    height: 510px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    flex-direction: column;
+    gap: 10px;
+}
+.plans h2{
+    color: #fff;
+    font-size: 28px;
+    text-transform: uppercase;
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+.plans i{
+    background: #27DBB1;
+    border-radius: 50%;
+    padding: 5px 7px;
+    color: #fff;
+    margin-right: 10px;
+}
+.plans div{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+    margin-left: 130px;
+}
+.plans:nth-child(2){
+    background-color: #4158D0;
+    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+}
+.plans:nth-child(1){
+    background-color: #0093E9;
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+}
+.btnUpgrade{
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+.active{
+    border-left: 5px solid var(--bg-btn) !important;
+}

@@ -1,3 +1,44 @@
 # https://www.robotstxt.org/robotstxt.html
+User-agent: 008
+Crawl-delay: 5
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+Crawl-Delay: 5
+
+User-agent: ia_archiver
+Crawl-Delay: 1
+
+User-agent: Yandex
+Crawl-Delay: 1
+
+User-agent: YandexBot
+Crawl-Delay: 1
+
+User-agent: Muso
+Crawl-Delay: 1
+
+User-agent: musobot
+Crawl-Delay: 1
+
+User-agent: MJ12bot
+Crawl-Delay: 1
+
+User-agent: bingbot
+Crawl-Delay: 1
+
+User-agent: coccoc
+Crawl-Delay: 1
+
+User-agent: coccocbot-web
+Crawl-delay: 1
+
 User-agent: *
+Disallow: /user/
+Disallow: /not-found/
 Disallow: /admin/
+Disallow: /xem-sau
+Disallow: /request/
+Disallow: /tim-kiem
+Disallow: /tai-khoan

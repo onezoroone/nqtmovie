@@ -2,43 +2,43 @@
 import { createContext, useContext, useRef, useState } from "react";
 const StateContext = createContext({
     role: null,
-    use: null,
+    avatar: null,
     toast: null,
-    setUser: () => {},
+    setAvatar: () => {},
     setRole: () => {},
 })
 
 export const ContextProvider =({children}) => {
     const toast = useRef(null);
-    const [role, _setRole] = useState(localStorage.getItem('user'));
-    const [user, _setUser] = useState(sessionStorage.getItem('user'));
+    const [role, _setRole] = useState(localStorage.getItem('role'));
+    const [avatar, _setAvatar] = useState(localStorage.getItem('avatar'));
     const [countRequests, setCountRequests] = useState(0);
     const [countReports, setCountReports] = useState(0);
     const setRole = (role) =>{
         _setRole(role)
         if(role) {
-            localStorage.setItem('user', role);
+            localStorage.setItem('role', role);
         }else{
-            localStorage.removeItem('user');
+            localStorage.removeItem('role');
         }
     }
 
-    const setUser = (user) =>{
-        _setUser(user)
-        if(user) {
-            sessionStorage.setItem('user', user);
+    const setAvatar = (avatar) =>{
+        _setAvatar(avatar)
+        if(avatar) {
+            localStorage.setItem('avatar', avatar);
         }else{
-            sessionStorage.removeItem('user');
+            localStorage.removeItem('avatar');
         }
     }
     return(
         <StateContext.Provider value={{
             role,
             toast,
-            user,
+            avatar,
             countReports,
             countRequests,
-            setUser,
+            setAvatar,
             setRole,
             setCountRequests,
             setCountReports

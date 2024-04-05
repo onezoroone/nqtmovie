@@ -29,7 +29,25 @@ function CarouselTemplate({movie, title}) {
           breakpoint: { max: 464, min: 0 },
           items: 2
         }
-      };
+    };
+    const diffTime = (date) => {
+      const currentDate = new Date();
+      const updatedDate = new Date(date);
+      const diff = currentDate.getTime() - updatedDate.getTime();
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      if(days > 0){
+          return `${days} ngày trước`;
+      }else if(hours > 0){
+          return `${hours} giờ trước`;
+      }else if(minutes > 0){
+          return `${minutes} phút trước`;
+      }else{
+          return `${seconds} giây trước`;
+      }
+    }
     return ( 
         <div className={styles.carouselUpdatedContainer}>
             <div className={styles.updatedcontainer}>
@@ -40,6 +58,9 @@ function CarouselTemplate({movie, title}) {
                         <div className={styles.detailsmovie}>
                             <p>{item.episode} - {item.type}</p>
                             <Link to={`/${item.slug}`}><h6>{item.name}</h6></Link>
+                        </div>
+                        <div className={styles.updatedTime}>
+                          {diffTime(item.updated_at)}
                         </div>
                     </div>
                 ))}

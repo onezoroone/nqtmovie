@@ -12,7 +12,7 @@ import { useStateContext } from "../../contexts/ContextProvider";
 function Header({countries, categories}) {
     const [visible, setVisible] = useState(false);
     const [visibleSidebar, setVisibleSidebar] = useState(false);
-    const {role, user, setUser, setRole} = useStateContext();
+    const {role, avatar, setAvatar, setRole} = useStateContext();
     const navigate = useNavigate();
     const [keyword, setKeyword] = useState("");
     const location = useLocation();
@@ -66,7 +66,8 @@ function Header({countries, categories}) {
     const handleLogOut = async () => {
         await axiosClient.post("/user/logout");
         setRole(null);
-        setUser(null);
+        setAvatar(null);
+
     }
 
     const onSubmit = (ev) => {
@@ -134,17 +135,17 @@ function Header({countries, categories}) {
                         </ul>
                     </Sidebar>
                     <div className="d-flex align-items-center gap-2">
-                        {(!role && !user) ? <Link to="/user/login"><i className={`${styles.user} bi bi-person-circle`}></i></Link>
+                        {(!role && !avatar) ? <Link to="/user/login"><i className={`${styles.user} bi bi-person-circle`}></i></Link>
                         :  <>
                         <div className="dropdown">
                             <button className="btn p-0 btn-transparent d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i className={`${styles.user} bi bi-person-circle text-white`}></i>
+                                <img width="50px" height="50px" src={`/api/avatars/${avatar}`} alt="avatar" className={`${styles.user} text-white`}></img>
                                 <i className="bi bi-chevron-down text-white"></i>
                             </button>
                             <ul className="dropdown-menu bg-secondary">
-                                <li><Link className="dropdown-item text-white" to="/">Tài khoản</Link></li>
+                                <li><Link className="dropdown-item text-white" to="/tai-khoan">Tài khoản</Link></li>
                                 <li><Link className="dropdown-item text-white" to="/xem-sau">Xem sau</Link></li>
-                                {(role == "admin" || user == "admin") && (<li><Link className="dropdown-item text-white" to="/admin/dashboard">Trang quản trị</Link></li>)} 
+                                {(role == "admin") && (<li><Link className="dropdown-item text-white" to="/admin/dashboard">Trang quản trị</Link></li>)} 
                                 <li><button onClick={() => handleLogOut()} className="dropdown-item text-white">Đăng Xuất</button></li>
                             </ul>
                         </div>

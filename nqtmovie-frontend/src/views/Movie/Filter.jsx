@@ -289,23 +289,41 @@ function Filter() {
                         <div className="text-white w-100 text-center">
                             <h4>Không có kết quả phù hợp.</h4>  
                         </div>}
-                        <div className={styles.pagination}>
+                        {!filterData || filterData.length != 0 && <div className={styles.pagination}>
                             {currentPage != 1 && 
                             <div onClick={() => setCurrentPage(currentPage - 1)} className={styles.prevPage}>
-                                <i className="bi bi-arrow-left"></i> Trang trước 
+                                <i className="bi bi-arrow-left"></i> <span>Trang trước</span> 
                             </div>}
                             <div className="d-flex gap-2">
-                            {pages.map((page, index) => (
-                                <div onClick={()=> setCurrentPage(index+1)} key={index} className={`${styles.page} ${currentPage == index + 1 && styles.active}`}>
-                                    {page}
-                                </div>
-                            ))}
+                            {pages.map((page, index) => {
+                                if (pages.length > 6) {
+                                    if (index === 0 || index === pages.length - 1 || index === currentPage - 1) {
+                                        return (
+                                            <div onClick={()=> setCurrentPage(index+1)} key={index} className={`${styles.page} ${currentPage == index + 1 && styles.active}`}>
+                                                {page}
+                                            </div>
+                                        )
+                                    } else if (index === currentPage || index === currentPage - 2) {
+                                        return (
+                                            <div key={index} className={`${styles.page}`}>
+                                                ...
+                                            </div>
+                                        )
+                                    }
+                                } else {
+                                    return (
+                                        <div onClick={()=> setCurrentPage(index+1)} key={index} className={`${styles.page} ${currentPage == index + 1 && styles.active}`}>
+                                            {page}
+                                        </div>
+                                    )
+                                }
+                            })}
                             </div>
                             {currentPage != pages.length && 
                             <div onClick={() => setCurrentPage(currentPage + 1)} className={styles.nextPage}>
-                                Trang tiếp <i className="bi bi-arrow-right"></i>
+                                <span>Trang tiếp</span> <i className="bi bi-arrow-right"></i>
                             </div>}
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>

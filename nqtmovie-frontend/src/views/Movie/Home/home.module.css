@@ -150,14 +150,12 @@
 
 @media (max-width: 1200px) and (min-width: 1001px){
     .listmovie{
-        padding: 0 10px;
         grid-template-columns: repeat(6, 1fr) !important;
     }
 }
 
 @media (max-width: 1000px) and (min-width: 851px){
     .listmovie{
-        padding: 0 10px;
         grid-template-columns: repeat(5, 1fr) !important;
     }
     .animation{
@@ -167,7 +165,6 @@
 
 @media (max-width: 850px) and (min-width: 651px){
     .listmovie{
-        padding: 0 10px;
         grid-template-columns: repeat(4, 1fr) !important;
     }
     .animation{
@@ -177,14 +174,12 @@
 
 @media (max-width: 650px) and (min-width: 501px){
     .listmovie{
-        padding: 0 10px;
         grid-template-columns: repeat(3, 1fr) !important;
     }
 }
 
 @media (max-width: 500px){
     .listmovie{
-        padding: 0 10px;
         grid-template-columns: repeat(2, 1fr) !important;
     }
 }

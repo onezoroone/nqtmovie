@@ -14,7 +14,7 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const toast = useRef(null);
     const router = useNavigate();
-    const {setRole} = useStateContext();
+    const {setRole, setAvatar} = useStateContext();
     function isValidEmail(email) {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailPattern.test(email);
@@ -33,6 +33,7 @@ function Login() {
                 })
                 .then((response) => {
                     setRole(response.data.user.role);
+                    setAvatar(response.data.user.avatar);
                     router("/");
                 }).catch((err) => {
                     toast.current.show({severity:'error', summary: 'Lỗi', detail: err.response.data.message, life: 3000});

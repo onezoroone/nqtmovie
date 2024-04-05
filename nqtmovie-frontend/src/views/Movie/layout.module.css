@@ -84,9 +84,9 @@
     justify-content: end;
 }
 @media (max-width:1430px){
-    .footer{
+    /* .footer{
         padding: 10px;
-    }
+    } */
 }
 @media(max-width:1400px){
     .titlefooter{

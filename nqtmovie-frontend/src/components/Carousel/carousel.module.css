@@ -63,6 +63,14 @@
 .carouselUpdatedContainer{
     display: flex;
 }
+.updatedTime{
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    background-color: var(--bg-btn);
+    padding: 3px 7px;
+    border-radius: 0 5px 5px 0;
+}
 
 @media(max-width: 1000px){
     .carouselcontainer{

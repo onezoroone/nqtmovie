@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     // User
     Route::post('/user/logout', [AuthController::class, 'logout']);
+    Route::post('/users/updateInfor', [UserController::class, 'updateInfor']);
     // Movie Private and Public
     Route::get('/movie/getMovie/{slug}', [MovieController::class, 'getDetailsMovie']);
     Route::get('/movie/getEpisodeByMovie/{slug}/{episode}', [MovieController::class, 'getEpisodeByMovie']);

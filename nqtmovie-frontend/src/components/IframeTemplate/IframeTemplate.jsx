@@ -76,7 +76,7 @@ function IframeTemplate({data}) {
             <div className="d-flex mt-2 position-relative">
                 <div className="d-flex flex-column w-100 align-items-center">
                     <h5 className="text-white">Chọn máy chủ</h5>
-                    <div className="d-flex gap-3">
+                    <div className="d-flex gap-3 mt-3">
                     {data.currentEpisode.map((item, index) => (
                         <div onClick={() => setServer(index)} className={`${styles.server} ${index == server && styles.activeServer}`} key={index}>
                             {item.server}

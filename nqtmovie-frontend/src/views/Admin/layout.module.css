@@ -38,6 +38,7 @@ body{background-color: #1b1c30 !important;}
 .titleLogo{
     color: #de0018;
     font-size: 20px;
+    margin: 0;
 }
 .containerlogo{
     display: flex;

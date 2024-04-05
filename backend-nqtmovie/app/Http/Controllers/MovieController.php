@@ -71,22 +71,6 @@ class MovieController extends Controller
         if(!$movie){
             return response()->json(['status'=>'error', 'movie' => "Không tìm thấy bộ phim!"], 200);
         }
-        if($movie->security == "True"){
-            if(Auth::check()){
-                $user = Auth::user();
-                if($user->role == "user"){
-                    return response()->json([
-                        'status' => "error",
-                        'message' => "Bạn không có quyền xem bộ phim này. Vui lòng liên hệ NQT."
-                    ], 200);
-                }
-            }else{
-                return response()->json([
-                    'status' => "error",
-                    'message' => "Bạn cần đăng nhập để xem được bộ phim này."
-                ], 200);
-            }
-        }
         $maxNumber = DB::table('episodes')->where('idMovie',$movie->id)->max(DB::raw('CAST(ep_number AS UNSIGNED)'));
         $maxDigits = strlen((string)$maxNumber);
         $episodes = DB::table('episodes')->where('idMovie',$movie->id)->orderByRaw("LPAD(ep_number, $maxDigits, '0') DESC")->get();
@@ -142,7 +126,7 @@ class MovieController extends Controller
                 if($user->role == "user"){
                     return response()->json([
                         'status' => "error",
-                        'message' => "Bạn không có quyền xem bộ phim này. Vui lòng liên hệ NQT."
+                        'message' => "Bạn không có quyền xem bộ phim này. Vui lòng nâng cấp tài khoản lên Premium."
                     ], 200);
                 }
             }else{
@@ -522,11 +506,20 @@ class MovieController extends Controller
         }
         $user = Auth::user();
         $list = DB::table('watchlist')->join('movies','movies.id','=','watchlist.idMovie')->where('idUser', $user->id)->get();
-        $history = DB::table('history_watch')->join('movies','movies.id','=','history_watch.idMovie')
-        ->join('episodes','episodes.id','=','history_watch.idEpisode')
+        $history = DB::table('history_watch')
+        ->join('movies','movies.id','=','history_watch.idMovie')
         ->where('idUser', $user->id)
-        ->select('movies.slug', 'movies.name','img','ep_number','episodes.slug as slugEpi')
+        ->select('movies.slug', 'movies.name','img','idEpisode')
         ->orderByDesc('history_watch.updated_at')->get();
+        foreach($history as $item){
+            $watched = explode(",", $item->idEpisode);
+            $episode = DB::table('episodes')->where('id', $watched[count($watched) - 1])->first();
+            if ($episode) {
+                $item->slugEpi = $episode->slug;
+            } else {
+                $item->slugEpi = null;
+            }
+        }
         return response()->json(['watchlist' => $list, 'historylist' => $history], 200);
     }
 

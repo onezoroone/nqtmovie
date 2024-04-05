@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+
 class UserController extends Controller
 {
     public function index(){
@@ -101,5 +103,23 @@ class UserController extends Controller
         ]);
         DB::table('password_reset_tokens')->where('token', $request->token)->delete();
         return response()->json("Đổi mật khẩu thành công.", 200);
+    }
+
+    public function updateInfor(Request $request){
+        $user = Auth::user();
+        $image = 'default.png';
+        $user->name = $request->name;
+        if($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $filename = time() . '.' . $avatar->getClientOriginalExtension();
+            $avatar->move(public_path('/avatars/'), $filename);
+            $image = $filename;
+        }
+        $user->avatar = $image;
+        $user->save();
+        return response()->json([
+            'message' => 'Cập nhật thông tin thành công!',
+            'avatar' => $image
+        ], 200);
     }
 }

@@ -25,6 +25,7 @@ import ListCategories from "./views/Admin/Categories/ListCategories.jsx";
 import RequestMovie from "./views/Movie/Request/RequestMovie.jsx";
 import ListRequests from "./views/Admin/ListRequests/ListRequests.jsx";
 import ListReports from "./views/Admin/ListReports/ListReports.jsx";
+import Setting from "./views/Guest/Setting/Setting.jsx";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
           <Route path="not-found" element={<NotFound message="Đi lạc rồi bé ơi." />} />
           <Route path="tim-kiem" element={<Filter />} />
           <Route path="xem-sau" element={<WatchList />} />
+          <Route path="tai-khoan" element={<Setting />} />
           <Route path="request" element={<RequestMovie />} />
           <Route path="user" element={<LayoutGuest />}>
             <Route path="login" element={<Login />} />

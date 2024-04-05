@@ -18,6 +18,7 @@ import EditMovie from "./views/Admin/EditMovie/EditMovie.jsx";
 import Episodes from "./views/Admin/Episodes/Episodes.jsx";
 import Filter from "./views/Movie/Filter.jsx";
 import WatchList from "./views/Movie/WatchList/WatchList.jsx";
+import Setting from "./views/Guest/Setting/Setting.jsx";
 const router = createBrowserRouter([
     {
         path: '/',
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
             {
                 path: '/xem-sau',
                 element: <WatchList />
+            },
+            {
+                path: '/tai-khoan',
+                element: <Setting />
             },
             {
                 path: '/not-found',

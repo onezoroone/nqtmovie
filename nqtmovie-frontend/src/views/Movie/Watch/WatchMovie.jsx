@@ -148,7 +148,8 @@ function WatchMovie() {
                         {(reviews && reviews.length != 0) ? reviews.map((item, index) => (
                         <div key={index} className="rounded-2 p-3" style={{background: '#0a0d14'}}>
                             <div className={styles.headbodyReviews}>
-                                <i className="fs-1 bi bi-person-circle"></i>
+                                {/* <i className="fs-1 bi bi-person-circle"></i> */}
+                                <img src={`/api/avatars/${item.avatar}`} width="50px" height="50px" alt="avatar" />
                                 <div className="d-flex flex-column">
                                     <div className="d-flex gap-2">
                                         <b>{item.name}</b><Rating value={item.rating} readOnly cancel={false} />

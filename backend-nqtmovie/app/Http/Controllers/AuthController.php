@@ -108,7 +108,10 @@ class AuthController extends Controller
     public function getUser(){
         if(Auth::check()){
             $user = Auth::user();
-            return response()->json(['status' => "success", 'user' => $user], 200);
+            $reviews = [];
+            $reviews = DB::table('reviews')->join('movies','movies.id','=','reviews.idMovie')
+            ->where('idUser', $user->id)->select('movies.name', 'review', 'rating', 'reviews.created_at')->get();
+            return response()->json(['status' => "success", 'user' => $user, 'reviews' => $reviews], 200);
         }else{
             return response()->json(['status' => "error", 'user' => "Chưa đăng nhập."], 422);
         }
