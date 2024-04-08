@@ -104,6 +104,7 @@
 .animation{
     position: relative;
     opacity: 0;
+    overflow: hidden;
     animation: fadeInAnimation 2s linear forwards;
 }
 .animation a{

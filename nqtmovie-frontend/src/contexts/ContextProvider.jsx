@@ -1,45 +1,35 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useRef, useState } from "react";
 const StateContext = createContext({
-    role: null,
-    avatar: null,
     toast: null,
-    setAvatar: () => {},
-    setRole: () => {},
+    user: null,
+    countRequests: 0,
+    countReports: 0,
+    setUser: () => {},
+    setCountRequests: () => {},
+    setCountReports: () => {}
 })
 
 export const ContextProvider =({children}) => {
     const toast = useRef(null);
-    const [role, _setRole] = useState(localStorage.getItem('role'));
-    const [avatar, _setAvatar] = useState(localStorage.getItem('avatar'));
+    const [user, _setUser] = useState(localStorage.getItem('user'));
     const [countRequests, setCountRequests] = useState(0);
     const [countReports, setCountReports] = useState(0);
-    const setRole = (role) =>{
-        _setRole(role)
-        if(role) {
-            localStorage.setItem('role', role);
+    const setUser = (user) =>{
+        _setUser(user)
+        if(user) {
+            localStorage.setItem('user', user);
         }else{
-            localStorage.removeItem('role');
-        }
-    }
-
-    const setAvatar = (avatar) =>{
-        _setAvatar(avatar)
-        if(avatar) {
-            localStorage.setItem('avatar', avatar);
-        }else{
-            localStorage.removeItem('avatar');
+            localStorage.removeItem('user');
         }
     }
     return(
         <StateContext.Provider value={{
-            role,
             toast,
-            avatar,
+            user,
             countReports,
             countRequests,
-            setAvatar,
-            setRole,
+            setUser,
             setCountRequests,
             setCountReports
         }}>

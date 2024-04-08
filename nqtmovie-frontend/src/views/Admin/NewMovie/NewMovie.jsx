@@ -35,7 +35,7 @@ function NewMovie() {
     const [loading, setLoading] = useState(false);
     const [episodes, setEpisodes] = useState(null);
     const [nameServer, setNameServer] = useState("");
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams, ] = useSearchParams();
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedPoster, setSelectedPoster] = useState(null);
     const {toast} = useStateContext();
@@ -69,10 +69,10 @@ function NewMovie() {
                 });
                 setSelectedCategories(category);
                 setSecurity(true);
-                setKeyword("xem phim " + movie.name+" vietsub, xem phim" + movie.original_name+" vietsub, xem phim "+ movie.name+" full hd, xem phim "+ movie.original_name+" hd");
+                setKeyword("xem phim " + movie.name+" vietsub nqtmovie, xem phim" + movie.original_name+" vietsub, xem phim "+ movie.name+" full hd, xem phim "+ movie.original_name+" hd");
                 setEpisodes(movie.episodes[0].items);
                 setNameServer("NGUONC");
-            }else if(source == "OPHIM"){
+            }else if(source == "OPHIM" || source == "KKPHIM"){
                 const data = JSON.parse(sessionStorage.getItem('apimovie'));
                 if(!data){
                     router("/not-found")
@@ -82,6 +82,8 @@ function NewMovie() {
                 setOthername(movie.origin_name);
                 setQuality(movie.quality);
                 setEpisode(movie.episode_current);
+                const typeMovie = {name: movie.type == "series" ? "Phim bộ" : "Phim lẻ"};
+                setType(typeMovie);
                 const listcasts = movie.actor.join(', ');
                 setCasts(listcasts);
                 setTime(movie.time);
@@ -96,21 +98,22 @@ function NewMovie() {
                 });
                 setSelectedCategories(category);
                 setSecurity(true);
-                setKeyword("xem phim " + movie.name+" vietsub, xem phim" + movie.origin_name+" vietsub, xem phim "+ movie.name+" full hd, xem phim "+ movie.origin_name+" hd");
+                setKeyword("xem phim " + movie.name+" vietsub nqtmovie, xem phim" + movie.origin_name+" vietsub, xem phim "+ movie.name+" full hd, xem phim "+ movie.origin_name+" hd");
                 setEpisodes(data.episodes[0].server_data);
-                setNameServer("OPHIM");
+                setNameServer(source);
             }
         }
         axiosClient.get("/categories/getAllCategories")
         .then((res) => {
             setCategories(res.data);
         })
-    },[])
+    },[router, searchParams])
     if(!categories) return <Loading />
 
     const typeMovie = [
         {name: 'Phim bộ'},
-        {name: 'Phim lẻ'}
+        {name: 'Phim lẻ'},
+        {name: 'Phim cấm'},
     ]
     const onSubmit = async (ev) => {
         ev.preventDefault();
@@ -137,11 +140,12 @@ function NewMovie() {
                 toast.current.show({severity:'success', summary: 'Thành Công', detail: response.data, life: 3000});
                 router(`/admin/edit-movie/${SlugName(name)}`)
             }).catch((err) => {
-                Object.values(err.response.data.errors).forEach(errorArray => {
-                    errorArray.forEach(errorMessage => {
-                        toast.current.show({severity:'error', summary: 'Lỗi', detail: errorMessage, life: 5000});
-                    });
-                });
+                toast.current.show({severity:'error', summary: 'Lỗi', detail: err.response.data.message, life: 5000});
+                // Object.values(err.response.data.errors).forEach(errorArray => {
+                //     errorArray.forEach(errorMessage => {
+                //         toast.current.show({severity:'error', summary: 'Lỗi', detail: errorMessage, life: 5000});
+                //     });
+                // });
             })
             setLoading(false);
         }

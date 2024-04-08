@@ -119,7 +119,23 @@ class UserController extends Controller
         $user->save();
         return response()->json([
             'message' => 'Cập nhật thông tin thành công!',
-            'avatar' => $image
+            'user' => $user
         ], 200);
+    }
+
+    public function banUser(Request $request){
+        $user = User::find($request->id);
+        if($user->id == 1){
+            return response()->json("Không thể cấm người dùng siêu cấp vip pro.", 422);
+        }
+        $message = "";
+        if($request->status == "Y"){
+            $message = "Đã bỏ cấm người dùng ".$user->name.".";
+        }else{
+            $message = "Đã cấm người dùng ".$user->name.".";
+        }
+        $user->status = $request->status;
+        $user->save();
+        return response()->json($message, 200);
     }
 }

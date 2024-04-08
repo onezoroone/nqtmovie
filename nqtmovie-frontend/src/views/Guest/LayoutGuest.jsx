@@ -5,9 +5,9 @@ import { useStateContext } from "../../contexts/ContextProvider";
 
 function LayoutGuest() {
     const router = useNavigate();
-    const {user, role} = useStateContext();
+    const {user} = useStateContext();
     useEffect(()=>{
-        if(user || role){
+        if(user){
             router("/");
         }
     },[])
@@ -16,7 +16,7 @@ function LayoutGuest() {
             <div style={{maxWidth:'1400px', padding:'10px',color:'#fff'}}>
                 <div className="d-flex flex-column align-items-center">
                     <div className="d-flex gap-3 align-items-center">
-                        <img src="/logo.png" alt="NQT Movie" width="70px" height="70px" />
+                        <img src="/logo1.png" alt="NQT Movie" width="70px" height="70px" />
                         <div className="flex-1 d-flex h-100 align-items-center">
                             <h4><span className="text-secondary">Chào mừng đến</span> NQT Movie</h4>
                         </div>

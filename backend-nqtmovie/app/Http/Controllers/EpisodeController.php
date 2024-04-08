@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Episode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use DOMDocument;
 class EpisodeController extends Controller
 {
     public function index($slug)
@@ -15,6 +15,7 @@ class EpisodeController extends Controller
             return response()->json(['status'=>'error', 'movie' => "Không tìm thấy bộ phim!"], 200);
         }
         $name = $movie->name;
+        $img = $movie->poster;
         $servers = DB::table('episodes')
         ->join('server_episodes', 'server_episodes.idEpisode', '=', 'episodes.id')->where('idMovie', $movie->id)->distinct()->select('server')->get();
         $data = [];
@@ -25,7 +26,7 @@ class EpisodeController extends Controller
             ->join('server_episodes', 'server_episodes.idEpisode', '=', 'episodes.id')
             ->where('server_episodes.server', $server->server)
             ->where('idMovie', $movie->id)
-            ->select('ep_link', 'ep_number', 'slug', 'idEpisode', 'server', 'created_at', 'server_episodes.id')
+            ->select('ep_link', 'ep_number', 'slug', 'idEpisode', 'server', 'thumbnail', 'created_at', 'server_episodes.id')
             ->orderByRaw("LPAD(ep_number, $maxDigits, '0') DESC")
             ->get();
             $serverData = [
@@ -39,6 +40,7 @@ class EpisodeController extends Controller
                     'ep_number' => $episode->ep_number,
                     'slug' => $episode->slug,
                     'idEpisode' => $episode->idEpisode,
+                    'thumbnail' => $episode->thumbnail,
                     'server' => $episode->server,
                     'id' => $episode->id,
                     'created_at' => $episode->created_at
@@ -47,7 +49,7 @@ class EpisodeController extends Controller
             $data[] = $serverData;
         }
 
-        return response()->json(['name' => $name, 'idMovie' => $movie->id ,'data' => $data], 200);
+        return response()->json(['name' => $name, 'idMovie' => $movie->id ,'data' => $data, 'img' => $img], 200);
     }
 
     public function store(Request $request)
@@ -153,21 +155,26 @@ class EpisodeController extends Controller
                 if(!$check){
                     DB::table('server_episodes')->insert([
                         'idEpisode' => $idEpisode->id,
-                        'ep_link' => $data[$i]['link_m3u8'],
-                        'server' => "OPHIM"
+                        'ep_link' => $data[$i]['link_embed'],
+                        'server' => "OPHIM",
+                    ]);
+                    DB::table('episodes')->where('id', $idEpisode->id)->update([
+                        'thumbnail' => dirname($data[$i]['link_m3u8']).'/1.jpg'
                     ]);
                 }
             }else{
+                $thumbnail = dirname($data[$i]['link_m3u8']).'/1.jpg';
                 $id = DB::table('episodes')->insertGetId([
                     'ep_number' => $data[$i]['name'],
                     'idMovie' => $movie->id,
                     'created_at' => now(),
-                    'slug' => "tap-".$data[$i]['name']
+                    'slug' => "tap-".$data[$i]['name'],
+                    'thumbnail' => $thumbnail
                 ]);
                 DB::table('server_episodes')->insert([
                     'idEpisode' => $id,
                     'ep_link' => $data[$i]['link_m3u8'],
-                    'server' => "OPHIM"
+                    'server' => "NQTMOVIE"
                 ]);
                 DB::table('server_episodes')->insert([
                     'idEpisode' => $id,
@@ -175,29 +182,6 @@ class EpisodeController extends Controller
                     'server' => "OPHIM"
                 ]);
             }
-            // $episode = DB::table('episodes')->join('server_episodes', 'server_episodes.idEpisode', '=', 'episodes.id')
-            // ->where('server_episodes.server', "OPHIM")
-            // ->where('idMovie', $movie->id)->where('ep_number', $data[$i]['name'])->first();
-            // if(!$episode){
-            //     $id = DB::table('episodes')->insertGetId([
-            //         'ep_number' => $data[$i]['name'],
-            //         'idMovie' => $movie->id,
-            //         'created_at' => now(),
-            //         'slug' => "tap-".$data[$i]['name']
-            //     ]);
-            //     DB::table('server_episodes')->insert([
-            //         'idEpisode' => $id,
-            //         'ep_link' => $data[$i]['link_m3u8'],
-            //         'server' => "NQTMOVIE"
-            //     ]);
-            //     DB::table('server_episodes')->insert([
-            //         'idEpisode' => $id,
-            //         'ep_link' => $data[$i]['link_embed'],
-            //         'server' => "OPHIM"
-            //     ]);
-            // }else{
-            //     return response()->json("Cập nhật tập phim thành công.", 200);
-            // }
         }
         return response()->json("Cập nhật tập phim thành công.", 200);
     }
@@ -241,24 +225,57 @@ class EpisodeController extends Controller
                     'server' => "NGUONC"
                 ]);
             }
-            // $episode = DB::table('episodes')->join('server_episodes', 'server_episodes.idEpisode', '=', 'episodes.id')
-            // ->where('server_episodes.server', "NGUONC")
-            // ->where('idMovie', $movie->id)->where('ep_number', $data[$i]['name'])->first();
-            // if(!$episode){
-            //     $id = DB::table('episodes')->insertGetId([
-            //         'ep_number' => $data[$i]['name'],
-            //         'idMovie' => $movie->id,
-            //         'created_at' => now(),
-            //         'slug' => "tap-".$data[$i]['name']
-            //     ]);
-            //     DB::table('server_episodes')->insert([
-            //         'idEpisode' => $id,
-            //         'ep_link' => $data[$i]['embed'],
-            //         'server' => "NGUONC"
-            //     ]);
-            // }else{
-            //     return response()->json("Cập nhật tập phim thành công.", 200);
-            // }
+        }
+        return response()->json("Cập nhật tập phim thành công.", 200);
+    }
+
+    public function crawlEpisodeKKPhim(Request $request){
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('GET', "https://phimapi.com/phim/".$request->slug);
+        $content = $response->getBody()->getContents();
+        $movie = DB::table('movies')->where('slug', $request->slug)->first();
+        $content = json_decode($content, true);
+        $data = $content['episodes'][0]['server_data'];
+        if(!$data){
+            return response()->json("Không tìm thấy phim.", 422);
+        }
+        $count = count($data);
+        for($i = $count - 1; $i >= 0; $i--){
+            $episodeNumber = (int) preg_replace('/\D/', '', $data[$i]['name']);
+            $idEpisode = DB::table('episodes')->where('idMovie', $movie->id)->where('ep_number', $episodeNumber)->first();
+            if($idEpisode){
+                $check = DB::table('server_episodes')->where('idEpisode', $idEpisode->id)->where('server', "KKPHIM")->first();
+                if(!$check){
+                    DB::table('server_episodes')->insert([
+                        'idEpisode' => $idEpisode->id,
+                        'ep_link' => $data[$i]['link_m3u8'],
+                        'server' => "Vietsub#1"
+                    ]);
+                    DB::table('server_episodes')->insert([
+                        'idEpisode' => $idEpisode->id,
+                        'ep_link' => $data[$i]['link_embed'],
+                        'server' => "KKPHIM",
+                    ]);
+                }
+            }else{
+                $thumbnail = dirname($data[$i]['link_m3u8']).'/1.jpg';
+                $id = DB::table('episodes')->insertGetId([
+                    'ep_number' => preg_replace('/\D/', '', $data[$i]['name']),
+                    'idMovie' => $movie->id,
+                    'created_at' => now(),
+                    'slug' => "tap-".preg_replace('/\D/', '', $data[$i]['name']),
+                ]);
+                DB::table('server_episodes')->insert([
+                    'idEpisode' => $id,
+                    'ep_link' => $data[$i]['link_m3u8'],
+                    'server' => "Vietsub#1"
+                ]);
+                DB::table('server_episodes')->insert([
+                    'idEpisode' => $id,
+                    'ep_link' => $data[$i]['link_embed'],
+                    'server' => "KKPHIM"
+                ]);
+            }
         }
         return response()->json("Cập nhật tập phim thành công.", 200);
     }

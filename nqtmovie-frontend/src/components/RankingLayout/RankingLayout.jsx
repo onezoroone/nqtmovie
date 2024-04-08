@@ -20,7 +20,7 @@ function RankingLayout({daily, weekly, monthly}) {
             {currentIndex == 0 && daily.slice(0, 5).map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>
@@ -34,7 +34,7 @@ function RankingLayout({daily, weekly, monthly}) {
             {currentIndex == 1 && weekly.slice(0, 5).map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>
@@ -48,7 +48,7 @@ function RankingLayout({daily, weekly, monthly}) {
             {currentIndex == 2 && monthly.slice(0, 5).map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>
@@ -64,7 +64,7 @@ function RankingLayout({daily, weekly, monthly}) {
             {currentIndex == 0 && daily.slice(5).map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>    
@@ -78,7 +78,7 @@ function RankingLayout({daily, weekly, monthly}) {
             {currentIndex == 1 && weekly.slice(5).map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>
@@ -92,7 +92,7 @@ function RankingLayout({daily, weekly, monthly}) {
             {currentIndex == 2 && monthly.slice(5).map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>
@@ -119,7 +119,7 @@ function RankingLayout({daily, weekly, monthly}) {
         {currentIndex == 0 && daily.map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>
@@ -133,7 +133,7 @@ function RankingLayout({daily, weekly, monthly}) {
         {currentIndex == 1 && weekly.map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>
@@ -147,7 +147,7 @@ function RankingLayout({daily, weekly, monthly}) {
         {currentIndex == 2 && monthly.map((item) => (
             <div className={styles.animation} key={item.id}>
                 <Link to={item.slug}>
-                    <img className={styles.img} src={item.img} title={item.name} alt={item.name} />
+                    <img loading="lazy" className={styles.img} src={item.img} title={item.name} alt={item.name} />
                     <div className={styles.hover}>
                         <i className="fs-1 bi bi-play-circle"></i>
                     </div>

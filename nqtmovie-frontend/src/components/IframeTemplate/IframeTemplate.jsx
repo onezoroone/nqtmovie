@@ -69,9 +69,10 @@ function IframeTemplate({data}) {
         <Toast ref={toast} />
         <div className={`col-lg-9 ${active && styles.active} p-0`}>
             <div className={styles.iframecontainer}>
-                {data.currentEpisode[server].server == "NQTMOVIE" ? <PlayerContainer file={data.currentEpisode[server].ep_link} />
-                : <iframe className={styles.iframe} src={data.currentEpisode[server].ep_link} allowFullScreen>
-                </iframe>}
+                {data.currentEpisode[server].server == "NQTMOVIE" && <PlayerContainer file={data.currentEpisode[server].ep_link} />}
+                {data.currentEpisode[server].server == "Vietsub#1" && <PlayerContainer file={data.currentEpisode[server].ep_link} />}
+                {(data.currentEpisode[server].server != "Vietsub#1" && data.currentEpisode[server].server != "NQTMOVIE") && 
+                <iframe className={styles.iframe} src={data.currentEpisode[server].ep_link} allowFullScreen></iframe>}
             </div>
             <div className="d-flex mt-2 position-relative">
                 <div className="d-flex flex-column w-100 align-items-center">
@@ -101,8 +102,8 @@ function IframeTemplate({data}) {
                 {data.episodes.map((item, index) => (
                 <div onClick={() => handleChangeEp(data.movie.slug, item.slug)} className={`${styles.itemEpisode} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisode}`} key={index}>
                     <div className={styles.thumbnail}>
-                        <img src={data.movie.poster} className={styles.imgepisode} alt={data.movie.name} />
-                        <div className={styles.timeThumbnail}>{data.movie.time}</div>
+                        <img src={item.thumbnail ? item.thumbnail : data.movie.poster} className={styles.imgepisode} alt={data.movie.name} />
+                        <div className={styles.timeThumbnail}>{item.duration ? item.duration : data.movie.time}</div>
                     </div>
                     <span data-id={item.id} className={data.history.includes((item.id).toString()) ? 'text-secondary' : 'text-white'}>Tập {item.ep_number}</span>
                 </div>
@@ -124,8 +125,8 @@ function IframeTemplate({data}) {
                     {data.episodes.map((item, index) => (
                         <div onClick={() => handleChangeEp(data.movie.slug, item.slug)} className={`${styles.boxepisodesMobileItem} ${item.ep_number == data.currentEpisode[0].ep_number && styles.activeEpisodeMobile}`} key={index}>
                             <div className="position-relative">
-                                <img className={styles.imgMobile} src={data.movie.poster} alt={data.movie.name} />
-                                <span className={`${styles.timeThumbnail} text-white fs-6`}>{data.movie.time}</span>
+                                <img className={styles.imgMobile} src={item.thumbnail ? item.thumbnail : data.movie.poster}  alt={data.movie.name} />
+                                <span className={`${styles.timeThumbnail} text-white fs-6`}>{item.duration ? item.duration : data.movie.time}</span>
                             </div>
                             <div className={styles.titleEpisodesBox}>
                                 <span className={data.history.includes((item.id).toString()) ? 'text-secondary' : 'text-white'}>Tập {item.ep_number}</span>

@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('users/getAllUser', [UserController::class, 'index']);
         Route::post('users/updateRole', [UserController::class, 'update']);
         Route::post('users/resetPassword', [UserController::class, 'resetPassword']);
+        Route::post('users/banUser', [UserController::class, 'banUser']);
         // Category
         Route::get('categories/getAllCategories', [CategoryController::class, 'index']);
         Route::post('categories/deleteCategory', [CategoryController::class, 'destroy']);
@@ -62,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Crawl
         Route::post('episodes/crawlEpisodeOphim', [EpisodeController::class, 'crawlEpisodeOphim']);
         Route::post('episodes/crawlEpisodeNguonc', [EpisodeController::class, 'crawlEpisodeNguonc']);
+        Route::post('episodes/crawlEpisodeKKPhim', [EpisodeController::class, 'crawlEpisodeKKPhim']);
     });
     // User
     Route::post('/user/logout', [AuthController::class, 'logout']);
@@ -94,3 +96,14 @@ Route::post('reports/createReport', [ReportController::class, 'store']);
 // Server
 Route::get('movie/getMovieServer/{slug}', [MovieController::class, 'getMovieServer']);
 Route::get('movie/getEpisodeByMovieServer/{slug}/{episode}', [MovieController::class, 'getEpisodeServer']);
+
+
+// Route::get('test', function (Request $request) {
+//     $client = new \GuzzleHttp\Client();
+//     $response = $client->request('GET', 'https://player.phimapi.com/player/?url=https://s3.phim1280.tv/20240319/bNiRcNFt/index.m3u8');
+//     $content = $response->getBody()->getContents();
+//     $dataArray = json_decode($content, true);
+//     $response = $client->request('GET', $request->src);
+//     $contents = $response->getBody()->getContents();
+//     return response()->make($contents)->header('Content-Type', 'image/jpeg');
+// });

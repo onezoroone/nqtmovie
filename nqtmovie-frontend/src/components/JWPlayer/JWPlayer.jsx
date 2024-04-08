@@ -39,10 +39,10 @@ class PlayerContainer extends React.Component {
     Object.keys(this.players).forEach((playerId) => {
       const player = this.players[playerId];
       const isPlaying = player.getState() === "playing";
-      player.addButton("https://img.nguonc.com/players/forward.svg", "Đến 10s", function () {
-        player.seek(player.getPosition() + 10);
-      }, "Đến 10s");
-      player.addButton("/logo.png", "NQTMOVIE.SITE");
+      player.addButton("https://img.nguonc.com/players/forward.svg", "Bỏ qua OP/ED", function () {
+        player.seek(player.getPosition() + 100);
+      }, "Bỏ qua OP/ED");
+      player.addButton("/logo1.png", "NQTMOVIE.SITE");
       if (isPlaying) {
         player.pause();
       }
@@ -97,11 +97,6 @@ class PlayerContainer extends React.Component {
         "width": "100%",
         "abouttext": 'https://nqtmovie.site',
         "aboutlink": 'https://nqtmovie.site', 
-        logo: {
-            file: "/jack.png",
-            logoBar: "",
-            position: "top-right",
-        },
     };
     return this.state.loaded ? (
       <div className="players-container position-absolute h-100 w-100">
@@ -114,7 +109,7 @@ class PlayerContainer extends React.Component {
         />
       </div>
     ) : (
-      "loading..."
+      "Loading..."
     );
   }
 }

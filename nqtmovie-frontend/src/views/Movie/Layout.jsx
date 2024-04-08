@@ -17,7 +17,7 @@ function LayoutMovie() {
                 <div className={`${styles.container}`}>
                     <div className={styles.titlefooter}>
                         <div className="d-flex">
-                            <img src="/logo.png" width="80px" alt="logo" />
+                            <img src="/logo1.png" width="80px" alt="logo" />
                             <div className="flex-1 d-flex justify-content-end align-items-center gap-3">
                                 <div>
                                     <a href="https://www.facebook.com/quangthangno1"><i className="bi bi-facebook"></i> Facebook</a>

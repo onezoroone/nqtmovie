@@ -12,7 +12,7 @@ import { useStateContext } from "../../contexts/ContextProvider";
 function Header({countries, categories}) {
     const [visible, setVisible] = useState(false);
     const [visibleSidebar, setVisibleSidebar] = useState(false);
-    const {role, avatar, setAvatar, setRole} = useStateContext();
+    const {user, setUser} = useStateContext();
     const navigate = useNavigate();
     const [keyword, setKeyword] = useState("");
     const location = useLocation();
@@ -65,9 +65,7 @@ function Header({countries, categories}) {
 
     const handleLogOut = async () => {
         await axiosClient.post("/user/logout");
-        setRole(null);
-        setAvatar(null);
-
+        setUser(null);
     }
 
     const onSubmit = (ev) => {
@@ -79,7 +77,7 @@ function Header({countries, categories}) {
     return (  
         <div className="d-flex justify-content-center">
             <nav className={styles.navbar}>
-                <Link to="/"><img src="/jack.png" className={styles.brand} alt="logo" /></Link>
+                <Link to="/"><img src="/brand.png" className={styles.brand} alt="logo" /></Link>
                 <ul className={styles.listnav}>
                     {navbar.map((item, index) => (
                     <li key={index}>
@@ -113,8 +111,8 @@ function Header({countries, categories}) {
                     <i className={`bi bi-list ${styles.menu}`} onClick={() => setVisibleSidebar(true)}></i>
                     <Sidebar visible={visibleSidebar} onHide={() => setVisibleSidebar(false)}>
                         <div className="d-flex align-items-center gap-4">
-                            <img src="/logo.png" width="50px" height="50px" alt="logo" />
-                            <h2>NQT Movie</h2>
+                            <img src="/logo1.png" width="50px" height="50px" alt="logo" />
+                            <h2 className="mb-0 mt-1">NQT Movie</h2>
                         </div>
                         <ul className={styles.listnavmobile}>
                             {navbar.map((item, index) => (
@@ -135,17 +133,17 @@ function Header({countries, categories}) {
                         </ul>
                     </Sidebar>
                     <div className="d-flex align-items-center gap-2">
-                        {(!role && !avatar) ? <Link to="/user/login"><i className={`${styles.user} bi bi-person-circle`}></i></Link>
+                        {(!user) ? <Link to="/user/login" title="Đăng nhập"><i className={`${styles.user} bi bi-person-circle`}></i></Link>
                         :  <>
                         <div className="dropdown">
                             <button className="btn p-0 btn-transparent d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img width="50px" height="50px" src={`/api/avatars/${avatar}`} alt="avatar" className={`${styles.user} text-white`}></img>
+                                <img width="50px" height="50px" src={`/api/avatars/${JSON.parse(user).avatar}`} alt="avatar" className={`${styles.user} rounded-5`}></img>
                                 <i className="bi bi-chevron-down text-white"></i>
                             </button>
                             <ul className="dropdown-menu bg-secondary">
                                 <li><Link className="dropdown-item text-white" to="/tai-khoan">Tài khoản</Link></li>
                                 <li><Link className="dropdown-item text-white" to="/xem-sau">Xem sau</Link></li>
-                                {(role == "admin") && (<li><Link className="dropdown-item text-white" to="/admin/dashboard">Trang quản trị</Link></li>)} 
+                                {(JSON.parse(user).role == "admin") && (<li><Link className="dropdown-item text-white" to="/admin/dashboard">Trang quản trị</Link></li>)} 
                                 <li><button onClick={() => handleLogOut()} className="dropdown-item text-white">Đăng Xuất</button></li>
                             </ul>
                         </div>

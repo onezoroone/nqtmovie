@@ -14,7 +14,7 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const toast = useRef(null);
     const router = useNavigate();
-    const {setRole, setAvatar} = useStateContext();
+    const {setUser} = useStateContext();
     function isValidEmail(email) {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailPattern.test(email);
@@ -32,8 +32,7 @@ function Login() {
                     email, password, remember: true
                 })
                 .then((response) => {
-                    setRole(response.data.user.role);
-                    setAvatar(response.data.user.avatar);
+                    setUser(JSON.stringify(response.data.user));
                     router("/");
                 }).catch((err) => {
                     toast.current.show({severity:'error', summary: 'Lỗi', detail: err.response.data.message, life: 3000});
@@ -50,7 +49,7 @@ function Login() {
         <Helmet>
             <title>{`Đăng Nhập - ${import.meta.env.VITE_BASE_NAME}`}</title>
             <meta property="og:title" content={`Đăng Nhập - ${import.meta.env.VITE_BASE_NAME}`} />
-            <meta property="og:image" content="/jack.png" />
+            <meta property="og:image" content="/brand.png" />
         </Helmet>
         <div className="w-100 rounded-2" style={{background: 'var(--bg-main)', paddingBottom:'20px'}}>
             <Toast ref={toast} />

@@ -79,7 +79,7 @@ function Description({movie, episodes, history, average, count}) {
                             {history && history.length != 0 && <Link to={`/${movie.slug}/${history[history.length - 1]}`} className={styles.btnContinue}><i className="bi bi-play-circle"></i>Xem Tiếp</Link>}
                         </div>
                         <div className="d-flex gap-2">
-                            <Link to="/" className={styles.btnTrailer}><i className="bi bi-play-circle"></i>Trailer</Link>
+                            {/* <Link to="/" className={styles.btnTrailer}><i className="bi bi-play-circle"></i>Trailer</Link> */}
                             <Link to="#" onClick={() => handleWatchList(movie.id)} className={styles.btnWatchList}><i className="bi bi-plus"></i>Xem sau</Link>
                         </div>
                     </div>

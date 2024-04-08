@@ -91,9 +91,25 @@ function ListUsers() {
     const leftToolbarTemplate = () => {
         return (
             <div className="d-flex flex-wrap gap-2">
-                <Button label="Cấm" disabled icon="bi bi-ban" className="rounded-2 text-white" severity="danger" />
+                <Button label="Mở cấm" onClick={() => banUser("Y")} disabled={selectedUsers && selectedUsers.length != 0 ? false : true} icon="bi bi-arrow-clockwise" className="rounded-2 text-white" severity="info" />
+                <Button label="Cấm" onClick={() => banUser("N")} disabled={selectedUsers && selectedUsers.length != 0 ? false : true} icon="bi bi-ban" className="rounded-2 text-white" severity="danger" />
             </div>
         );
+    };
+
+    const banUser = async (action) => {
+        for(let i = 0; i < selectedUsers.length; i++){
+            await axiosClient.post("/users/banUser",{
+                id: selectedUsers[i].id,
+                status: action
+            }).then((response) => {
+                toast.current.show({severity:'success', summary: 'Thành công', detail:response.data, life: 3000});
+            }).catch((err) => {
+                toast.current.show({severity:'error', summary: 'Thất bại', detail:err.response.data.message, life: 3000});
+            })
+        }
+        setReload(!reload);
+        setSelectedUsers(null);
     };
 
     const actionBodyTemplate = (rowData) => {
@@ -106,7 +122,7 @@ function ListUsers() {
     };
 
     const statusBodyTemplate = (rowData) => {
-        return <Tag value={rowData.role} className="text-uppercase" severity={getSeverity(rowData)}></Tag>;
+        return <Tag value={rowData.role == "admin" ? 'ADMIN' : (rowData.role == "private" ? 'Premium' : 'Basic')} className="text-uppercase" severity={getSeverity(rowData)}></Tag>;
     };
 
     const getSeverity = (user) => {
@@ -115,7 +131,7 @@ function ListUsers() {
                 return 'success';
 
             case 'private':
-                return 'warning';
+                return 'primary';
 
             case 'user':
                 return 'danger';
@@ -156,8 +172,8 @@ function ListUsers() {
         { name: 'user' },
         { name: 'private'},
         { name: 'admin'}
-    ]
-    return (  
+    ];
+    return (
         <div>
         <Helmet>
             <title>{`List Users - ${import.meta.env.VITE_BASE_NAME}`}</title>
@@ -172,12 +188,14 @@ function ListUsers() {
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Đang hiển thị {first} đến {last} của {totalRecords} người dùng" globalFilter={globalFilter} header={header}>
                 <Column selectionMode="multiple" ></Column>
-                <Column field="id" header="ID" sortable style={{ minWidth: '0.5rem' }}></Column>
-                <Column field="name" header="Tên" style={{ minWidth: '16rem' }}></Column>
+                {/* <Column field="id" header="ID" sortable style={{ minWidth: '0.5rem' }}></Column> */}
+                <Column field="avatar" header="Avatar" body={(rowData) => <img src={`/api/avatars/${rowData.avatar}`} alt={rowData.name} className="avatar" width="70px" height="70px" />} style={{ minWidth: '6rem' }}></Column>
+                <Column field="name" header="Tên"></Column>
                 <Column field="email" header="Email" style={{ minWidth: '16rem' }}></Column>
                 <Column field="role" header="Vai trò" body={statusBodyTemplate} sortable></Column>
                 <Column field="verified" header="Xác thực" dataType="boolean" sortable body={verifiedBodyTemplate} />
                 <Column field="last_used_at" header="Truy cập"  sortable></Column>
+                <Column field='status' header='Trạng thái' body={(rowData) => <Tag value={rowData.status == "Y" ? "Normal" : 'Bị cấm'} className="text-uppercase" severity={rowData.status == "Y" ? "success" : "danger"}></Tag>} sortable></Column>
                 <Column field="created_at" header="Tạo ngày"></Column>
                 <Column body={actionBodyTemplate} style={{ minWidth: '12rem' }}></Column>
             </DataTable>

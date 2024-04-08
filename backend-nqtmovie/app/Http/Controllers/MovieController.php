@@ -13,6 +13,7 @@ use ImageKit\ImageKit;
 use Illuminate\Support\Facades\Storage;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Http;
+use DOMDocument;
 
 class MovieController extends Controller
 {
@@ -75,9 +76,12 @@ class MovieController extends Controller
         $maxDigits = strlen((string)$maxNumber);
         $episodes = DB::table('episodes')->where('idMovie',$movie->id)->orderByRaw("LPAD(ep_number, $maxDigits, '0') DESC")->get();
         $categories = DB::table('movie_categories')->join('categories','categories.id','=','movie_categories.idCategory')->where('idMovie',$movie->id)->get();
-        $category = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->first();
-        $related = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->where('idCategory',$category->idCategory)
-        ->where('idMovie','!=',$movie->id)->limit(10)->get();
+        $category = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->where('movies.id', $movie->id)->first();
+        $related = [];
+        if($category){
+            $related = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->where('idCategory',$category->idCategory)
+            ->where('idMovie','!=',$movie->id)->limit(10)->get();
+        }
         $history = [];
         if(Auth::check()){
             $user = Auth::user();
@@ -85,7 +89,10 @@ class MovieController extends Controller
             if($check){
                 $watched = explode(",", $check->idEpisode);
                 foreach($watched as $item){
-                    $episode = DB::table('episodes')->where('id', $item)->first()->slug;
+                    $episode = DB::table('episodes')->where('id', $item)->first();
+                    if($episode){
+                        $episode = $episode->slug;
+                    }
                     $history[] = $episode;
                 }
             }
@@ -145,7 +152,7 @@ class MovieController extends Controller
         $maxDigits = strlen((string)$maxNumber);
         $categories = DB::table('movie_categories')->join('categories','categories.id','=','movie_categories.idCategory')->where('idMovie',$movie->id)->get();
         $episodes = DB::table('episodes')->where('idMovie',$movie->id)->orderByRaw("LPAD(ep_number, $maxDigits, '0') DESC")->get();
-        $category = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->first();
+        $category = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->where('movies.id', $movie->id)->first();
         $related = DB::table('movies')->join('movie_categories','movie_categories.idMovie','=','movies.id')->where('idCategory',$category->idCategory)
         ->where('idMovie','!=',$movie->id)->limit(10)->get();
         $history = [];
@@ -174,7 +181,8 @@ class MovieController extends Controller
         }
         $reviews = DB::table('reviews')->join('users','users.id','=','reviews.idUser')
         ->where('idMovie', $movie->id)
-        ->select('idMovie', 'name', 'rating', 'reviews.created_at', 'review')->orderByDesc("reviews.created_at")->limit(5)
+        ->select('idMovie', 'name', 'avatar', 'rating', 'reviews.created_at', 'review')
+        ->orderByDesc('reviews.created_at')->limit(5)
         ->get();
         return response()->json([
             'status'=>'success',
@@ -243,14 +251,17 @@ class MovieController extends Controller
                 'img' => $imageLink,
             ]);
         } else {
-            $resImg = Http::get($request->image);
-            Storage::disk('public')->put($request->slug.'/image.jpg', $resImg->body());
-            $response = $imageKit->upload([
-                'file' => $request->image,
-                'fileName' => $request->name.".jpg",
-                'folder' => 'images/'.$request->slug,
-            ]);
-            $imageLink = $response->result->url;
+            $imageLink = "";
+            if($request->image != ""){
+                $resImg = Http::get($request->image);
+                Storage::disk('public')->put($request->slug.'/image.jpg', $resImg->body());
+                $response = $imageKit->upload([
+                    'file' => $request->image,
+                    'fileName' => $request->name.".jpg",
+                    'folder' => 'images/'.$request->slug,
+                ]);
+                $imageLink = $response->result->url;
+            }
             DB::table('movies')->where('id',$id)->update([
                 'img' => $imageLink,
             ]);
@@ -271,12 +282,15 @@ class MovieController extends Controller
                 'poster' => $posterLink,
             ]);
         } else {
-            $response = $imageKit->upload([
-                'file' => $request->poster,
-                'fileName' => $request->name.".jpg",
-                'folder' => 'posters/'.$request->slug,
-            ]);
-            $posterLink = $response->result->url;
+            $posterLink = "";
+            if($request->poster != ""){
+                $response = $imageKit->upload([
+                    'file' => $request->poster,
+                    'fileName' => $request->name.".jpg",
+                    'folder' => 'posters/'.$request->slug,
+                ]);
+                $posterLink = $response->result->url;
+            }
             DB::table('movies')->where('id',$id)->update([
                 'poster' => $posterLink,
             ]);
@@ -299,10 +313,16 @@ class MovieController extends Controller
         }
         if($request->episodes){
             foreach($request->episodes as $item){
+                $episodeName = "";
+                if($request->nameServer == "KKPHIM"){
+                    $episodeName = preg_replace('/\D/', '', $item['name']);
+                }else{
+                    $episodeName = $item['name'];
+                }
                 $idEpisode = DB::table('episodes')->insertGetId([
                     'idMovie' => $id,
-                    'ep_number' => $item['name'],
-                    'slug' => 'tap-'.$item['name'],
+                    'ep_number' => $episodeName,
+                    'slug' => 'tap-'.$episodeName,
                     'created_at' => now()
                 ]);
                 if($request->nameServer == "NGUONC"){
@@ -311,10 +331,23 @@ class MovieController extends Controller
                         'idEpisode' => $idEpisode,
                         'ep_link' => $item['embed']
                     ]);
-                }
-                if($request->nameServer == "OPHIM"){
+                }else if($request->nameServer == "OPHIM"){
+                    DB::table('episodes')->where('id', $idEpisode)->update([
+                        'thumbnail' => dirname($item['link_m3u8']).'/1.jpg',
+                    ]);
                     DB::table('server_episodes')->insert([
                         'server' => "NQTMOVIE",
+                        'idEpisode' => $idEpisode,
+                        'ep_link' => $item['link_m3u8']
+                    ]);
+                    DB::table('server_episodes')->insert([
+                        'server' => $request->nameServer,
+                        'idEpisode' => $idEpisode,
+                        'ep_link' => $item['link_embed']
+                    ]);
+                }else if($request->nameServer == "KKPHIM"){
+                    DB::table('server_episodes')->insert([
+                        'server' => "Vietsub#1",
                         'idEpisode' => $idEpisode,
                         'ep_link' => $item['link_m3u8']
                     ]);
@@ -695,9 +728,9 @@ class MovieController extends Controller
             $responsebody = $client->request('GET', 'https://ophim1.com/phim/'.$item['slug']);
             $content = $responsebody->getBody()->getContents();
             $dataArray = json_decode($content, true);
-            $type = "Phim bộ";
-            if($dataArray['movie']['type'] != "series"){
-                $type = "Phim lẻ";
+            $type = "Phim lẻ";
+            if($dataArray['movie']['type'] == "series"){
+                $type = "Phim bộ";
             }
             if(!$check){
                 $id = DB::table('movies')->insertGetId([
@@ -758,6 +791,7 @@ class MovieController extends Controller
                         'idMovie' => $id,
                         'ep_number' => $item['name'],
                         'slug' => 'tap-'.$item['name'],
+                        'thumbnail' => dirname($item['link_m3u8']).'/1.jpg',
                         'created_at' => now()
                     ]);
                     DB::table('server_episodes')->insert([
@@ -785,6 +819,7 @@ class MovieController extends Controller
                             'idMovie' => $check->id,
                             'ep_number' => $item['name'],
                             'slug' => 'tap-'.$item['name'],
+                            'thumbnail' => dirname($item['link_m3u8']).'/1.jpg',
                             'created_at' => now()
                         ]);
                         DB::table('server_episodes')->insert([

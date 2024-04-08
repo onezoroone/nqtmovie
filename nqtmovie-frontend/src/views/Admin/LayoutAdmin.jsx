@@ -69,10 +69,9 @@ function LayoutAdmin() {
     const location = useLocation();
     const router = useNavigate();
     const [loading, setLoading] = useState(true);
-    const {setRole} = useStateContext();
     const [activeSidebar, setActiveSidebar] = useState(false);
     const [visible, setVisible] = useState(false);
-    const {toast, countReports, countRequests, setCountReports, setCountRequests} = useStateContext();
+    const {toast, user, countReports, countRequests, setCountReports, setCountRequests, setUser} = useStateContext();
     useEffect(()=>{
         const checkUser = async () => {
             await axiosClient.get("/user")
@@ -134,7 +133,7 @@ function LayoutAdmin() {
     }
     const handleLogOut = async () => {
         await axiosClient.post("/user/logout");
-        setRole(null);
+        setUser(null);
         router("/");
     }
 
@@ -148,7 +147,7 @@ function LayoutAdmin() {
             <div className={`${activeSidebar && styles.activeSidebar}`}>
                 <nav className={`${styles.sidebar}`}>
                     <div className={styles.containerlogo}>
-                        <Link to="/admin/dashboard"><img src="/logo.png" width="50px" height="50px" alt="NQTMovie" /></Link>
+                        <Link to="/admin/dashboard"><img src="/logo1.png" width="50px" height="50px" alt="NQTMovie" /></Link>
                         <h3 className={styles.titleLogo}>NQT Movie</h3>
                         <div className="flex-1 d-flex justify-content-end" style={{paddingRight:'15px'}}>
                             <i style={{cursor:'pointer'}} onClick={() => handleToggle()} className="bi bi-list fs-3"></i>
@@ -157,14 +156,15 @@ function LayoutAdmin() {
                     <div className={styles.customer}>
                         <i onClick={() => handleToggle()} className={`bi bi-list fs-3 ${styles.mobileToggle}`}></i>  
                         <div>
-                            <i className="bi fs-1 bi-person-circle"></i>
+                            {/* <i className="bi fs-1 bi-person-circle"></i> */}
+                            <img src={`/api/avatars/${JSON.parse(user).avatar}`} width="55px" height="55px" className="rounded-5" alt="avatar" />
                         </div>
                         <div className="d-flex flex-column gap-2">
                             <div className={styles.welcome}>
-                                Chào mừng <span className="text-danger">Nghiêm Quang Thắng</span>
+                                Chào mừng <span className="text-danger">{JSON.parse(user).name}</span>
                             </div>
-                            <div className="text-secondary text-center">
-                                Admin
+                            <div className="text-secondary text-center text-uppercase">
+                                {JSON.parse(user).role}
                             </div>
                         </div>
                     </div>
@@ -194,19 +194,19 @@ function LayoutAdmin() {
                 </nav>
                 <Sidebar className="admin" visible={visible} onHide={() => setVisible(false)}>
                 <div className={styles.containerlogo}>
-                        <img src="/logo.png" width="50px" height="50px" alt="NQTMovie" />
-                        <h3 className={styles.titleLogo}>NQT Movie</h3>
+                        <img src="/logo1.png" width="50px" height="50px" alt="NQTMovie" />
+                        <h3 className={`${styles.titleLogo} mb-0`}>NQT Movie</h3>
                     </div>
                     <div className={styles.customer}>
                         <div>
-                            <i className="bi fs-1 bi-person-circle"></i>
+                            <img src={`/api/avatars/${JSON.parse(user).avatar}`} width="60px" height="60px" className="rounded-5" alt="avatar" />
                         </div>
                         <div className="d-flex flex-column gap-2">
                             <div className={styles.welcome}>
-                                Welcome <span className="text-danger">Nghiêm Quang Thắng</span>
+                                Welcome <span className="text-danger">{JSON.parse(user).name}</span>
                             </div>
-                            <div className="text-secondary text-center">
-                                Admin
+                            <div className="text-secondary text-center text-uppercase">
+                                {JSON.parse(user).role}
                             </div>
                         </div>
                     </div>
@@ -249,12 +249,13 @@ function LayoutAdmin() {
                         </div>
                         <div className={`${styles.infoCustomer} dropdown`}>
                             <a href="#" className="d-flex align-items-center gap-2" style={{color:'#9292a9'}} data-bs-toggle="dropdown" aria-expanded="false">
-                                <i className="bi bi-person-circle fs-3"></i> 
-                                <span>Admin.</span>
+                                {/* <i className="bi bi-person-circle fs-3"></i>  */}
+                                <img src={`/api/avatars/${JSON.parse(user).avatar}`} width="40px" height="40px" className="rounded-5" alt="avatar" />
+                                <span className="text-uppercase">{JSON.parse(user).role}.</span>
                                 <i className="bi fs-6 bi-chevron-down"></i>
                             </a>
                             <ul className={`dropdown-menu ${styles.menuperson}`}>
-                                <li><Link className="dropdown-item" to="/admin"><i className="bi bi-gear-fill"></i>Cài đặt</Link></li>
+                                <li><Link className="dropdown-item" to="/tai-khoan"><i className="bi bi-gear-fill"></i>Cài đặt</Link></li>
                                 <li onClick={() => handleLogOut()}><Link className="dropdown-item"><i className="bi bi-box-arrow-right"></i>Đăng xuất</Link></li>
                                 <li><Link className="dropdown-item" to="/">NQTMOVIE.SITE</Link></li>
                             </ul>

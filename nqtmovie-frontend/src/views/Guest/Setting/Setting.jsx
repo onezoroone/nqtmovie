@@ -11,7 +11,7 @@ function Setting() {
     const [active, setActive] = useState(0);
     const router = useNavigate();
     const [selectedFile, setSelectedFile] = useState(null);
-    const {avatar, setAvatar} = useStateContext();
+    const {user, setUser} = useStateContext();
     const [list,] = useState([
         {
             name: 'Thông tin chung',
@@ -71,7 +71,7 @@ function Setting() {
             alert(res.data.message);
             setImage(null);
             setName("");
-            setAvatar(res.data.avatar);
+            setUser(res.data.user);
         })
         .catch((err) => alert(err.response.data.message));
     }
@@ -84,7 +84,7 @@ function Setting() {
             <div className="row text-white">
                 <div className="col-lg-3 d-flex flex-column">
                     <div className="d-flex align-items-center gap-2 mb-3 px-2">
-                        <img src={`/api/avatars/${avatar}`} alt="avatrr" width="70px" height="70px" />
+                        <img src={`/api/avatars/${JSON.parse(user).avatar}`} alt="avatrr" width="70px" height="70px" />
                         <h5 className="text-center text-uppercase text-break">{data.user.name}</h5>
                     </div>
                     <ul className="list-group bg-transparent border-0 mb-3">
@@ -213,7 +213,7 @@ function Setting() {
                                 <i className="bi bi-check"></i>
                                 <span>Phim HD</span>
                             </div>
-                            <button className={`${styles.btnUpgrade} ${data.user.role !== "user" ? 'text-secondary' : 'text-dark'}`} onClick={() => alert('Vui lòng liên hệ ADMIN')} disabled={data.user.role != "user"}>
+                            <button className={`${styles.btnUpgrade} ${data.user.role !== "user" ? 'text-secondary' : 'text-dark'}`} onClick={() => alert('Vui lòng liên hệ Facebook ADMIN ở phía cuối')} disabled={data.user.role != "user"}>
                                 {data.user.role == "user" ? 'Nâng cấp ngay' : 'Đang sử dụng gói này'}
                             </button>
                         </div>

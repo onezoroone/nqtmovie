@@ -3,7 +3,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link } from "react-router-dom";
 
-function CarouselTemplate({movie, title}) {
+function CarouselTemplate({movie, title, time}) {
     const responsive = {
         superLargeDesktop: {
           breakpoint: { max: 4000, min: 3000 },
@@ -59,9 +59,10 @@ function CarouselTemplate({movie, title}) {
                             <p>{item.episode} - {item.type}</p>
                             <Link to={`/${item.slug}`}><h6>{item.name}</h6></Link>
                         </div>
+                        {time && 
                         <div className={styles.updatedTime}>
                           {diffTime(item.updated_at)}
-                        </div>
+                        </div>}
                     </div>
                 ))}
                 </Carousel>

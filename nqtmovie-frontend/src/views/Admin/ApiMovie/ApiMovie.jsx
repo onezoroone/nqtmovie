@@ -17,10 +17,13 @@ function ApiMovie() {
     const [value1, setValue1] = useState("");
     const options = [
         {
+            name: 'OPHIM'
+        },
+        {
             name: 'NGUONC'
         },
         {
-            name: 'OPHIM'
+            name: 'KKPHIM'
         }
     ];
     const onSubmit = async (ev) => {
@@ -40,6 +43,14 @@ function ApiMovie() {
                 })
             }else if(selectedAPI.name == "OPHIM"){
                 await axios.get(`${import.meta.env.VITE_BASE_OPHIM}` + value)
+                .then((res) => {
+                    sessionStorage.setItem('apimovie', JSON.stringify(res.data));
+                    router("/admin/new-movie?movie="+res.data.movie.slug+"&api=" + selectedAPI.name);
+                }).catch(() => {
+                    toast.current.show({severity:'error', summary: 'Lỗi', detail:'Đường dẫn không hợp lệ.', life: 3000});
+                })
+            }else if(selectedAPI.name == "KKPHIM"){
+                await axios.get(`${import.meta.env.VITE_BASE_KKPHIM}` + value)
                 .then((res) => {
                     sessionStorage.setItem('apimovie', JSON.stringify(res.data));
                     router("/admin/new-movie?movie="+res.data.movie.slug+"&api=" + selectedAPI.name);
@@ -83,6 +94,8 @@ function ApiMovie() {
                         toast.current.show({severity:'error', summary: 'Lỗi', detail:err.response.data.message, life: 3000});
                     })
                 }
+            }else{
+                toast.current.show({severity:'error', summary: 'Lỗi', detail:'Nguồn này chưa được hỗ trợ.', life: 3000});
             }
             setLoading(false);
         }

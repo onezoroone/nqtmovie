@@ -31,6 +31,7 @@ function Episodes() {
     const [newEpisode, setNewepisode] = useState("");
     const [manyEpiDialog, setManyEpiDialog] = useState(false);
     const [value, setValue] = useState('');
+    const [thumbnail, setThumbnail] = useState('');
     const toast = useRef();
     useEffect(() => {
         const fetch = async () => {
@@ -80,6 +81,7 @@ function Episodes() {
         setNameServer(episode.server);
         setLinkEp(episode.ep_link);
         setNewepisode(episode.ep_number);
+        setThumbnail(episode.thumbnail);
         setEpisodeDialog(true);
     }
 
@@ -88,6 +90,7 @@ function Episodes() {
         setNameServer("");
         setLinkEp("");
         setNewepisode("");
+        setThumbnail("");
         setEpisodeDialog(true);
     }
 
@@ -118,6 +121,17 @@ function Episodes() {
         setReload(!reload);
     }
 
+    const crawlKKPhim = async () => {
+        await axiosClient.post("/episodes/crawlEpisodeKKPhim",{
+            slug: slug
+        }).then((res) => {
+            toast.current.show({severity:'success', summary: 'Thành công', detail: res.data, life: 5000});
+        }).catch((err) => {
+            toast.current.show({severity:'error', summary: 'Thất bại', detail: err.response.data.message, life: 5000});
+        })
+        setReload(!reload);
+    }
+
     const leftToolbarTemplate = () => {
         return (
             <div className="d-flex flex-wrap gap-2">
@@ -126,6 +140,7 @@ function Episodes() {
                 <Button label="Xóa" className='text-white rounded-3' icon="bi bi-trash" severity="danger" disabled={selectedEpisodes && selectedEpisodes.length != 0 ? false : true} onClick={confirmDeleteSelected} />
                 <Button label="NGUONC" className='text-white rounded-3' icon="bi bi-fast-forward-fill" severity="primary" onClick={crawlNguonc} />
                 <Button label="OPHIM" className='text-white rounded-3' icon="bi bi-fast-forward-fill" severity="help" onClick={crawlOphim} />
+                <Button label="KKPHIM" className='text-white rounded-3' icon="bi bi-fast-forward-fill" severity="warning" onClick={crawlKKPhim} />
             </div>
         );
     };
@@ -200,9 +215,11 @@ function Episodes() {
     const actionBodyTemplate = (rowData) => {
         return (
             <React.Fragment>
-                <a href={`/${slug}/${rowData.slug}`} target="_blank" rel="noreferrer" className="text-decoration-none" style={{marginRight:'10px'}}><Button icon="bi bi-eye" severity="help" outlined className="rounded-5" /></a>
-                <Button icon="bi bi-pencil" rounded outlined className="mr-2 rounded-5" style={{marginRight:'10px'}} onClick={() => openDialog(rowData)} />
-                <Button icon="bi bi-trash" rounded outlined severity="danger" className='rounded-5' onClick={() => confirmDeleteEpisode(rowData)} />
+                <div className="d-flex gap-2">
+                    <a href={`/${slug}/${rowData.slug}`} target="_blank" rel="noreferrer" className="text-decoration-none"><Button icon="bi bi-eye" severity="help" outlined className="rounded-5" /></a>
+                    <Button icon="bi bi-pencil" rounded outlined className="mr-2 rounded-5"onClick={() => openDialog(rowData)} />
+                    <Button icon="bi bi-trash" rounded outlined severity="danger" className='rounded-5' onClick={() => confirmDeleteEpisode(rowData)} />
+                </div>
             </React.Fragment>
         );
     };
@@ -270,8 +287,8 @@ function Episodes() {
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                 currentPageReportTemplate="Đang hiển thị {first} đến {last} của {totalRecords} tập phim" globalFilter={globalFilter} value={episodes}>
                 <Column selectionMode="multiple"></Column>
-                <Column field="ep_number" header="Episode"></Column>
                 <Column field="slug" body={bodyTemplate} header="Name"></Column>
+                <Column field="thumbnail" header="Thumbnail" body={(rowData) => <img src={rowData.thumbnail ? rowData.thumbnail : data.img} alt={rowData.thumbnail ? rowData.thumbnail : data.img} className="rounded-2" width="100px" height="70px" />} style={{ minWidth: '6rem' }}></Column>
                 <Column field="ep_link" header="Link"></Column>
                 <Column field="created_at" header="Create At"></Column>
                 <Column body={actionBodyTemplate} style={{ minWidth: '10rem' }}></Column>
@@ -283,6 +300,12 @@ function Episodes() {
                         Tên máy chủ
                     </label>
                     <InputText id="name" onChange={(e) => setNameServer(e.target.value)} value={nameServer} required />
+                </div>
+                <div className="field mb-2">
+                    <label htmlFor="thumbnail" className="font-bold mb-2">
+                        Thumbnail
+                    </label>
+                    <InputText id="thumbnail" onChange={(e) => setThumbnail(e.target.value)} value={thumbnail} />
                 </div>
                 <div className="field mb-2">
                     <label htmlFor="episode" className="font-bold mb-2">

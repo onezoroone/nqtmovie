@@ -53,7 +53,7 @@ function Register() {
         <Helmet>
             <title>{`Đăng Ký - ${import.meta.env.VITE_BASE_NAME}`}</title>
             <meta property="og:title" content={`Đăng Ký - ${import.meta.env.VITE_BASE_NAME}`} />
-            <meta property="og:image" content="/jack.png" />
+            <meta property="og:image" content="/brand.png" />
         </Helmet>
         <div className="w-100 rounded-2" style={{background: 'var(--bg-main)', paddingBottom:'20px'}}>
             <Toast ref={toast} />

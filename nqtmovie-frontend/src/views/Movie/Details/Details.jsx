@@ -63,7 +63,7 @@ function Details() {
                     </div>
                     <div className="col-lg-9 mt-3">
                         <h1 className={styles.title}>{data.movie.name}</h1>
-                        <h3 className={styles.othername}>{data.movie.othername}</h3>
+                        <h2 className={styles.othername} style={{fontSize:'calc(1.3rem + .6vw)'}}>{data.movie.othername}</h2>
                         <Description average={data.averageRating} count={data.numReviews} history={data.history} movie={data.movie} episodes={data.episodes} />
                     </div>
                 </div>

@@ -21,7 +21,7 @@ function Home() {
                 <meta property="og:url" content={import.meta.env.VITE_BASE_URL} />
                 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
                 <meta name="keywords" content="xem phim, anime, animetv, animehay, phim hay, anime vietsub, phim vietsub, vietsub online, phim vietsub online, xem anime, phim hd, xem phim full hd, phim moi nhat, phim anime, hoat hinh, nqtmovie, nqt movie" />
-                <meta property="og:image" content="/jack.png" />
+                <meta property="og:image" content="/brand.png" />
             </Helmet>
             <MainCarousel movie={data.banners} />
             <div className="d-flex align-items-center flex-column">
@@ -36,7 +36,7 @@ function Home() {
                         <h2 className="mb-4">
                             Phim mới cập nhật
                         </h2>
-                        <CarouselTemplate title="Hãy Đón Xem Những Bộ Phim Mới Nhất!" movie={data.updatedMovies} />
+                        <CarouselTemplate title="Hãy Đón Xem Những Bộ Phim Mới Nhất!" movie={data.updatedMovies} time={true} />
                     </div>
                 </section>
                 <section className={`${styles.container} mt-4`}>
@@ -45,7 +45,7 @@ function Home() {
                     {data.seriesmovies.map((item) => (
                         <div key={item.id} className={styles.animation}>
                             <Link to={item.slug}>
-                                <img className={styles.imgList} src={item.img} title={item.name} alt={item.name} />
+                                <img loading="lazy" className={styles.imgList} src={item.img} title={item.name} alt={item.name} />
                                 <div className={styles.hover}>
                                     <i className="fs-1 bi bi-play-circle"></i>
                                 </div>
@@ -71,7 +71,7 @@ function Home() {
                         {data.singlemovies.map((item) => (
                             <div key={item.id} className={styles.animation}>
                                 <Link to={item.slug}>
-                                    <img className={styles.imgList} src={item.img} title={item.name} alt={item.name} />
+                                    <img loading="lazy" className={styles.imgList} src={item.img} title={item.name} alt={item.name} />
                                     <div className={styles.hover}>
                                         <i className="fs-1 bi bi-play-circle"></i>
                                     </div>
